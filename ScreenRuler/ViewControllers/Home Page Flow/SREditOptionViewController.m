@@ -14,6 +14,7 @@
 #import "UIColor+ThemeColor.h"
 #import <Crashlytics/Answers.h>
 #import "UIImage+Rotating.h"
+#import "AdManager.h"
 
 @interface SREditOptionViewController ()<SRImageControllerDelegate,UIScrollViewDelegate>
 
@@ -33,12 +34,14 @@
     [super viewDidLoad];
 
     self.image = self.image;
+    [[AdManager sharedManager] loadInterstitialAd];
+
 }
 
 -(void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
-    
+    [[AdManager sharedManager] loadInterstitialAd];
     self.scrollContainerView.showZoomControls = [[NSUserDefaults standardUserDefaults] boolForKey:@"ShowZoomOption"];
     self.scrollContainerView.zoomScale = self.zoomScale;
     self.scrollContainerView.contentOffset = self.contentOffset;
@@ -75,6 +78,7 @@
 
 -(IBAction)resizeAction:(UIBarButtonItem*)item
 {
+//    [[AdManager sharedManager] showAd:self];
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"resize", nil) message:nil preferredStyle:UIAlertControllerStyleActionSheet];
     
     CGSize imageSize = self.scrollContainerView.image.size;
@@ -96,6 +100,7 @@
 
             UIImage *image = [weakSelf.scrollContainerView.image scaleToFillSize:newSize];
             weakSelf.image = image;
+            [[AdManager sharedManager] showAd:self];
         }]];
     }
     
@@ -112,6 +117,7 @@
             
             UIImage *image = [weakSelf.scrollContainerView.image scaleToFillSize:newSize];
             weakSelf.image = image;
+            [[AdManager sharedManager] showAd:self];
         }]];
     }
     
@@ -173,6 +179,7 @@
 
         UIImage *image = [weakSelf.scrollContainerView.image scaleToFillSize:newSize];
         weakSelf.image = image;
+        [[AdManager sharedManager] showAd:self];
     }];
     doneAction.enabled = NO;
     
@@ -213,6 +220,7 @@
             else
             {
                 doneAction.enabled = YES;
+
             }
         }];
     }];
@@ -260,6 +268,7 @@
     
     [alertController addAction:doneAction];
     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"cancel", nil) style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
+
     }]];
     
     alertController.popoverPresentationController.barButtonItem = item;
@@ -269,9 +278,8 @@
 
 - (IBAction)roatateAction:(UIBarButtonItem *)sender
 {
-    /*
-     TODO: Implement Rotation Animation
-     */
+    [[AdManager sharedManager] loadInterstitialAd];
+    [[AdManager sharedManager] showAd:self];
     UIImage *image = [self.scrollContainerView.image rotateInDegrees:90];
     self.scrollContainerView.image = image;
 }
@@ -279,6 +287,8 @@
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
+    [[AdManager sharedManager] loadInterstitialAd];
+    [[AdManager sharedManager] showAd:self];
     if ([segue.destinationViewController isKindOfClass:[SRCropViewController class]])
     {
         SRCropViewController *controller = (SRCropViewController*)segue.destinationViewController;

@@ -10,4 +10,5 @@ target 'ScreenRuler' do
     pod 'iRate'
     pod 'Fabric'
     pod 'Crashlytics'
+    pod 'Google-Mobile-Ads-SDK'
 end

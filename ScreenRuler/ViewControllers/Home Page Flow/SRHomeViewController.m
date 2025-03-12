@@ -32,6 +32,7 @@
 #import "UIBezierPath+Shapes.h"
 #import "SRDebugHelper.h"
 #import "SROnboardingNavigationController.h"
+#import "AdManager.h"
 
 //https://www.iconfinder.com/iconsets/hawcons-gesture-stroke
 
@@ -105,7 +106,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    [[AdManager sharedManager] loadInterstitialAd];
 //    self.additionalSafeAreaInsets = UIEdgeInsetsMake(20, 20, 20, 20);
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateTheme) name:kRASettingsChangedNotification object:nil];
@@ -748,7 +749,8 @@
 }
 
 - (IBAction)optionPhotoOptions:(id)sender {
-    
+//    [self loadInterstitial];
+//    [self showAd];
     __weak typeof(self) weakSelf = self;
 
     void (^loadWithAuthorizationStatus)(PHAuthorizationStatus status) = ^(PHAuthorizationStatus status){
@@ -778,6 +780,8 @@
     }
     else
     {
+        [[AdManager sharedManager] loadInterstitialAd];
+        [[AdManager sharedManager] showAd:self];
         loadWithAuthorizationStatus([PHPhotoLibrary authorizationStatus]);
     }
 }
@@ -1043,6 +1047,11 @@
         [[NSUserDefaults standardUserDefaults] setBool:!weakSelf.lineFrameView.hideRuler forKey:@"SideRulerShow"];
         [[NSUserDefaults standardUserDefaults] synchronize];
     }];
+    if (button.selected)
+    {
+        [[AdManager sharedManager] loadInterstitialAd];
+        [[AdManager sharedManager] showAd:self];
+    }
 }
 
 #pragma mark - Free Ruler
@@ -1075,6 +1084,8 @@
     
     if (button.selected)
     {
+        [[AdManager sharedManager] loadInterstitialAd];
+        [[AdManager sharedManager] showAd:self];
         self.freeRulerView.hidden = NO;
     }
     
@@ -1132,6 +1143,8 @@
     
     if (button.selected)
     {
+        [[AdManager sharedManager] loadInterstitialAd];
+        [[AdManager sharedManager] showAd:self];
         self.freeProtractorView.hidden = NO;
     }
     
@@ -1166,7 +1179,13 @@
 -(IBAction)straightenFrameAction:(UIButton*)button
 {
     button.selected = !button.selected;
-    
+
+    if (button.selected)
+    {
+        [[AdManager sharedManager] loadInterstitialAd];
+        [[AdManager sharedManager] showAd:self];
+    }
+
     __weak typeof(self) weakSelf = self;
 
     [UIView animateWithDuration:0.2 animations:^{
@@ -1393,6 +1412,8 @@
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
+//    [self loadInterstitial];
+//    [self showAd];
     if ([segue.destinationViewController isKindOfClass:[SREditOptionViewController class]])
     {
         SREditOptionViewController *controller = (SREditOptionViewController*)segue.destinationViewController;

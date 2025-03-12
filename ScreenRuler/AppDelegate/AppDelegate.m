@@ -15,6 +15,7 @@
 #import <Crashlytics/Crashlytics.h>
 #import <iVersion/iVersion.h>
 #import <iRate/iRate.h>
+@import GoogleMobileAds;
 
 NSNotificationName iVersionDidUpdateNotification = @"iVersionDidUpdateNotification";
 
@@ -55,7 +56,8 @@ const NSInteger kSRAppStoreID = 1104790987;
     [iRate sharedInstance].usesUntilPrompt = 15;}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    
+    [[GADMobileAds sharedInstance] startWithCompletionHandler:nil];
+
     [iVersion sharedInstance].delegate = self;
     
     if ([[UIScrollView appearance] respondsToSelector:@selector(setContentInsetAdjustmentBehavior:)])

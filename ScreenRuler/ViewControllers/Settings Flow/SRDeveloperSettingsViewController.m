@@ -9,6 +9,7 @@
 #import "SRDeveloperSettingsViewController.h"
 #import "AppDelegate.h"
 #import "SRDebugHelper.h"
+#import "AdManager.h"
 
 @interface SRDeveloperSettingsViewController ()
 
@@ -27,7 +28,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
+    [[AdManager sharedManager] loadInterstitialAd];
     self.title = NSLocalizedString(@"developer_options", nil);
     self.labelShowTouches.text = NSLocalizedString(@"show_touches", nil);
     self.labelInUseMemory.text = NSLocalizedString(@"in_use_memory", nil);
@@ -36,6 +37,10 @@
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
 
     _switchShowTouch.on = appDelegate.shouldShowTouches;
+
+    if (_switchShowTouch.on) {
+        [[AdManager sharedManager] showAd:self];
+        }
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -60,8 +65,11 @@
 {
     AppDelegate *appDelegate = (AppDelegate*)[[UIApplication sharedApplication] delegate];
     appDelegate.shouldShowTouches = _switchShowTouch.on;
-}
-
+    if (sender.on) {
+              [[AdManager sharedManager] loadInterstitialAd];
+              [[AdManager sharedManager] showAd:self];
+      }
+  }
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
