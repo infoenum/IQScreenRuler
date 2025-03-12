@@ -5,6 +5,7 @@
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="22504"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -401,6 +402,40 @@
                                     <constraint firstAttribute="trailing" secondItem="Y6q-fu-Bb9" secondAttribute="trailing" constant="20" symbolic="YES" id="x2T-ri-60V"/>
                                 </constraints>
                             </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="axW-1r-9gc">
+                                <rect key="frame" x="0.0" y="459" width="320" height="60"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="5" translatesAutoresizingMaskIntoConstraints="NO" id="ZVH-aY-iBn">
+                                        <rect key="frame" x="20" y="5" width="280" height="48"/>
+                                        <subviews>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Opacity Slider" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kR4-fD-qRR">
+                                                <rect key="frame" x="0.0" y="0.0" width="280" height="25"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="height" constant="25" id="SLr-Qn-uAQ"/>
+                                                </constraints>
+                                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="17"/>
+                                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                <nil key="highlightedColor"/>
+                                            </label>
+                                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1.5" minValue="0.5" maxValue="1.5" translatesAutoresizingMaskIntoConstraints="NO" id="Uq2-se-S7T">
+                                                <rect key="frame" x="-2" y="30" width="284" height="19"/>
+                                                <color key="tintColor" systemColor="systemBlueColor"/>
+                                                <connections>
+                                                    <action selector="sliderButtonAction:" destination="BYZ-38-t0r" eventType="valueChanged" id="MYk-pt-8xz"/>
+                                                </connections>
+                                            </slider>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="groupTableViewBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstItem="ZVH-aY-iBn" firstAttribute="leading" secondItem="axW-1r-9gc" secondAttribute="leading" constant="20" id="3vL-Sm-zDt"/>
+                                    <constraint firstAttribute="bottom" secondItem="ZVH-aY-iBn" secondAttribute="bottom" constant="7" id="PFg-2r-HQA"/>
+                                    <constraint firstItem="ZVH-aY-iBn" firstAttribute="top" secondItem="axW-1r-9gc" secondAttribute="top" constant="5" id="ROr-rv-Sw4"/>
+                                    <constraint firstAttribute="height" constant="60" id="oLP-td-b2Y"/>
+                                    <constraint firstAttribute="trailing" secondItem="ZVH-aY-iBn" secondAttribute="trailing" constant="20" id="oU4-JK-xbg"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="A4z-B1-9aq"/>
                         <color key="backgroundColor" red="0.9882352941176471" green="0.9882352941176471" blue="0.9882352941176471" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -408,11 +443,14 @@
                             <constraint firstItem="kNi-0z-pNK" firstAttribute="top" secondItem="A4z-B1-9aq" secondAttribute="top" symbolic="YES" id="1kj-r9-Pmy"/>
                             <constraint firstItem="O8f-46-hTs" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="59S-tJ-Y1V"/>
                             <constraint firstItem="0LF-Qs-9va" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="5rV-Um-LHL"/>
+                            <constraint firstItem="A4z-B1-9aq" firstAttribute="trailing" secondItem="axW-1r-9gc" secondAttribute="trailing" id="E5Y-7I-unj"/>
                             <constraint firstItem="0LF-Qs-9va" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="JSR-C6-Cxs"/>
                             <constraint firstItem="A4z-B1-9aq" firstAttribute="bottom" secondItem="kNi-0z-pNK" secondAttribute="bottom" symbolic="YES" id="Qze-ow-8DS"/>
+                            <constraint firstItem="A4z-B1-9aq" firstAttribute="bottom" secondItem="axW-1r-9gc" secondAttribute="bottom" id="S4k-ny-gSX"/>
                             <constraint firstItem="A4z-B1-9aq" firstAttribute="trailing" secondItem="O8f-46-hTs" secondAttribute="trailing" symbolic="YES" id="aVy-lZ-T5N"/>
                             <constraint firstAttribute="trailing" secondItem="0LF-Qs-9va" secondAttribute="trailing" id="hji-hT-sLr"/>
                             <constraint firstAttribute="bottom" secondItem="0LF-Qs-9va" secondAttribute="bottom" id="kNO-Mn-CBJ"/>
+                            <constraint firstItem="axW-1r-9gc" firstAttribute="leading" secondItem="A4z-B1-9aq" secondAttribute="leading" id="op8-en-UM6"/>
                             <constraint firstItem="kNi-0z-pNK" firstAttribute="leading" secondItem="A4z-B1-9aq" secondAttribute="leading" symbolic="YES" id="sa9-LL-OTP">
                                 <variation key="heightClass=regular-widthClass=regular" constant="32"/>
                             </constraint>
@@ -517,6 +555,9 @@
                                         <color key="value" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="protractorAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="rsh-4L-NaK"/>
+                                </connections>
                             </button>
                         </barButtonItem>
                         <barButtonItem style="plain" systemItem="flexibleSpace" id="C7W-k1-JTA"/>
@@ -591,6 +632,7 @@
                         <outlet property="lineFrameView" destination="0LF-Qs-9va" id="e1K-o0-1Mi"/>
                         <outlet property="loadingColorDataIndicator" destination="SN5-Zm-Xev" id="Pj7-Vm-mG9"/>
                         <outlet property="noScreenshotActionButton" destination="Y6q-fu-Bb9" id="sPr-lD-Tzi"/>
+                        <outlet property="opacitySlider" destination="Uq2-se-S7T" id="cfA-HD-E6h"/>
                         <outlet property="optionBarButton" destination="WA8-oJ-SMr" id="EQM-uV-Ce7"/>
                         <outlet property="protractorBarButton" destination="REr-JI-SZU" id="ICv-28-J0Q"/>
                         <outlet property="protractorButton" destination="hVd-2v-j6x" id="Fa6-M2-YKJ"/>
@@ -600,6 +642,7 @@
                         <outlet property="settingsMenuBarButton" destination="hAR-cr-aCN" id="naC-05-MhC"/>
                         <outlet property="sideRulerBarButton" destination="m4q-rI-c12" id="l8M-7s-9qR"/>
                         <outlet property="sideRulerButton" destination="nRs-Du-Sr1" id="Lpk-xr-LQr"/>
+                        <outlet property="sliderView" destination="axW-1r-9gc" id="YcH-ha-4QM"/>
                         <outlet property="straighenButton" destination="pyb-lI-IG3" id="Xsn-qT-gvh"/>
                         <outlet property="straightenBarButton" destination="MQY-9P-4nS" id="ZOs-YO-Q2o"/>
                         <outlet property="topColorView" destination="WY5-3S-3ca" id="1x3-RI-Nbj"/>
@@ -723,7 +766,7 @@
                     </constraints>
                 </view>
             </objects>
-            <point key="canvasLocation" x="1834" y="1884"/>
+            <point key="canvasLocation" x="1833.75" y="1883.4507042253522"/>
         </scene>
         <!--Edit Options-->
         <scene sceneID="iSm-yp-WvR">

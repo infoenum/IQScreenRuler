@@ -132,6 +132,8 @@
         weakSelf.navigationController.navigationBar.tintColor = [UIColor themeTextColor];
         weakSelf.navigationController.navigationBar.barStyle = ![UIColor isThemeInverted];
         [weakSelf.tableView reloadData];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"ThemeChangedNotification" object:nil];
+
     }];
 }
 

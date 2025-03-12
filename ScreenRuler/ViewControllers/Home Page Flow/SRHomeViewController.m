@@ -48,6 +48,7 @@
 @property(nonatomic, strong) ACMagnifyingGlass *magnifyingGlass;
 
 @property(nonatomic, strong) IQRulerView *freeRulerView;
+
 @property(nonatomic, strong) IQProtractorView *freeProtractorView;
 
 @property (strong, nonatomic) IBOutlet IQLineFrameView *lineFrameView;
@@ -64,7 +65,7 @@
 
 @property (strong, nonatomic) IBOutlet SRToolbarButton *sideRulerButton;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *sideRulerBarButton;
-@property (strong, nonatomic) IBOutlet SRToolbarButton *freeHandButton;
+@property (strong, nonatomic) IBOutlet SRToolbarButton *freeHandButton; // Opacity button
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *freeHandBarButton;
 @property (strong, nonatomic) IBOutlet SRToolbarButton *straighenButton;
 @property (strong, nonatomic) IBOutlet UIBarButtonItem *straightenBarButton;
@@ -85,14 +86,16 @@
 @property (strong, nonatomic) IBOutlet UILabel *labelBlue;
 @property (strong, nonatomic) IBOutlet UILabel *labelColorLocation;
 @property (strong, nonatomic) IBOutlet UIActivityIndicatorView *loadingColorDataIndicator;
+@property (strong, nonatomic) IBOutlet UISlider *opacitySlider;
+@property (weak, nonatomic) IBOutlet UIView *sliderView;
 
 @property (nonatomic, strong) CBZSplashView *splashView;
 
 @end
 
-
 @implementation SRHomeViewController
 @dynamic image;
+
 
 -(void)awakeFromNib
 {
@@ -109,20 +112,23 @@
     [[AdManager sharedManager] loadInterstitialAd];
 //    self.additionalSafeAreaInsets = UIEdgeInsetsMake(20, 20, 20, 20);
     
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateTheme) name:kRASettingsChangedNotification object:nil];
+    
+    //    self.additionalSafeAreaInsets = UIEdgeInsetsMake(20, 20, 20, 20);
+        
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateTheme) name:kRASettingsChangedNotification object:nil];
 
-    self.topColorView.translatesAutoresizingMaskIntoConstraints = YES;
+        self.topColorView.translatesAutoresizingMaskIntoConstraints = YES;
 
-    self.magnifyingGlass = [[ACMagnifyingGlass alloc] initWithFrame:CGRectMake(0, 0, 115, 115)];
-    self.magnifyingGlass.viewToMagnify = self.scrollContainerView.imageView;
+        self.magnifyingGlass = [[ACMagnifyingGlass alloc] initWithFrame:CGRectMake(0, 0, 115, 115)];
+        self.magnifyingGlass.viewToMagnify = self.scrollContainerView.imageView;
 
-    BOOL shouldLineFrameShow = [[NSUserDefaults standardUserDefaults] boolForKey:@"LineFrameShow"];
-    BOOL shouldFreeHandRulerShow = [[NSUserDefaults standardUserDefaults] boolForKey:@"FreeHandRulerShow"];
-    BOOL shouldFreeProtractorShow = [[NSUserDefaults standardUserDefaults] boolForKey:@"FreeProtractorShow"];
-    BOOL shouldSideRulerShow = [[NSUserDefaults standardUserDefaults] boolForKey:@"SideRulerShow"];
+        BOOL shouldLineFrameShow = [[NSUserDefaults standardUserDefaults] boolForKey:@"LineFrameShow"];
+        BOOL shouldFreeHandRulerShow = [[NSUserDefaults standardUserDefaults] boolForKey:@"FreeHandRulerShow"];
+        BOOL shouldFreeProtractorShow = [[NSUserDefaults standardUserDefaults] boolForKey:@"FreeProtractorShow"];
+        BOOL shouldSideRulerShow = [[NSUserDefaults standardUserDefaults] boolForKey:@"SideRulerShow"];
 
-    {
         {
+            {
             self.sideRulerButton.layer.cornerRadius = 3.0;
             self.sideRulerButton.layer.masksToBounds = YES;
             self.sideRulerButton.selected = shouldSideRulerShow;
@@ -230,6 +236,24 @@
     [self.navigationController.view addSubview:splashView];
     
     self.splashView = splashView;
+    
+    
+    
+    //MARK: Hide and show slider
+    UITapGestureRecognizer *hideTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideSlider:)];
+       [self.scrollContainerView addGestureRecognizer:hideTapGesture];
+
+       UITapGestureRecognizer *showTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showSlider:)];
+       [self.freeRulerView addGestureRecognizer:showTapGesture];
+       
+       UITapGestureRecognizer *showProtractorTapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showSlider:)];
+       [self.freeProtractorView addGestureRecognizer:showProtractorTapGesture];
+    
+    if ((self.freeRulerView.alpha != 0) || (self.freeProtractorView.alpha)) {
+        self.sliderView.alpha = 1;
+    } else {
+        self.sliderView.alpha = 0;
+    }
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -260,6 +284,11 @@
     {
         self.lineFrameView.rulerColor = shadeFactorColor;
         self.scrollContainerView.imageView.lineColor = self.lineFrameView.lineColor = originalThemeColor;
+    }
+    
+    {
+        //sliderView
+        self.sliderView.backgroundColor = [UIColor themeColor];
     }
     
     __weak typeof(self) weakSelf = self;
@@ -339,9 +368,12 @@
     _viewNoScreenshotInfo.hidden = image != nil;
     _lineFrameView.hidden = image == nil;
     _freeRulerView.hidden = image == nil;
+    _opacitySlider.hidden = image == nil;
+    _sliderView.hidden = image == nil;
     _freeProtractorView.hidden = image == nil;
 }
 
+// MARK: OPtionAction
 - (IBAction)optionAction:(UIBarButtonItem *)sender
 {
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
@@ -351,40 +383,74 @@
     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"share_photo", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
 
         [Answers logShareWithMethod:@"Share Photo" contentName:@"Share Activity" contentType:@"share" contentId:@"share.photo" customAttributes:nil];
-        
-        UIActivityViewController *shareController = [[UIActivityViewController alloc] initWithActivityItems:@[weakSelf.scrollContainerView.image] applicationActivities:nil];
-        
-        shareController.excludedActivityTypes = @[UIActivityTypeAssignToContact,
-                                             UIActivityTypeAddToReadingList,
-                                             UIActivityTypeOpenInIBooks,
-                                             UIActivityTypePostToTencentWeibo,
-                                             UIActivityTypePostToVimeo,
-                                             UIActivityTypePostToWeibo,
-                                             UIActivityTypePostToFacebook,
-                                             UIActivityTypePostToTwitter,
-                                             UIActivityTypePostToFlickr,
-                                             UIActivityTypePrint];
 
-        shareController.popoverPresentationController.barButtonItem = sender;
+        // Take Screenshot & Crop it
+        UIImage *croppedScreenshot = [weakSelf captureCroppedScreenshot];
 
-        [weakSelf presentViewController:shareController animated:YES completion:^{
-        }];
+        if (croppedScreenshot) {
+            UIActivityViewController *shareController = [[UIActivityViewController alloc] initWithActivityItems:@[croppedScreenshot] applicationActivities:nil];
+
+            shareController.excludedActivityTypes = @[
+                UIActivityTypeAssignToContact,
+                UIActivityTypeAddToReadingList,
+                UIActivityTypeOpenInIBooks,
+                UIActivityTypePostToTencentWeibo,
+                UIActivityTypePostToVimeo,
+                UIActivityTypePostToWeibo,
+                UIActivityTypePostToFacebook,
+                UIActivityTypePostToTwitter,
+                UIActivityTypePostToFlickr,
+                UIActivityTypePrint
+            ];
+
+            shareController.popoverPresentationController.barButtonItem = sender;
+            [weakSelf presentViewController:shareController animated:YES completion:nil];
+        }
     }]];
-    
-    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"start_help_tour", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        
-        [Answers logCustomEventWithName:@"Start Help Tour" customAttributes:nil];
 
+    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"start_help_tour", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [Answers logCustomEventWithName:@"Start Help Tour" customAttributes:nil];
         [weakSelf startHelpTour];
     }]];
 
     [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"cancel", nil) style:UIAlertActionStyleCancel handler:nil]];
     
     alertController.popoverPresentationController.barButtonItem = sender;
-    
-    [self presentViewController:alertController animated:YES completion:^{
-    }];
+    [self presentViewController:alertController animated:YES completion:nil];
 }
+
+// MARK: Capture Cropped Screenshot
+- (UIImage *)captureCroppedScreenshot {
+    UIWindow *keyWindow = [UIApplication sharedApplication].keyWindow;
+    UIGraphicsBeginImageContextWithOptions(keyWindow.bounds.size, NO, [UIScreen mainScreen].scale);
+    
+    [keyWindow drawViewHierarchyInRect:keyWindow.bounds afterScreenUpdates:YES];
+    UIImage *fullScreenshot = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    
+    if (!fullScreenshot) {
+        return nil;
+    }
+    
+    CGFloat statusBarHeight = UIApplication.sharedApplication.statusBarFrame.size.height;
+    CGFloat navBarHeight = self.navigationController.navigationBar.frame.size.height;
+    CGFloat tabBarHeight = self.tabBarController.tabBar.frame.size.height;
+    
+    CGFloat bottomInset = keyWindow.safeAreaInsets.bottom; // Notch wale devices ke liye
+
+    CGFloat cropY = statusBarHeight + navBarHeight;
+    CGFloat cropHeight = fullScreenshot.size.height - cropY - tabBarHeight - bottomInset;
+
+    CGRect cropRect = CGRectMake(0, cropY * fullScreenshot.scale, fullScreenshot.size.width * fullScreenshot.scale, cropHeight * fullScreenshot.scale);
+    
+    // Crop Screenshot
+    CGImageRef imageRef = CGImageCreateWithImageInRect(fullScreenshot.CGImage, cropRect);
+    UIImage *croppedImage = [UIImage imageWithCGImage:imageRef scale:fullScreenshot.scale orientation:fullScreenshot.imageOrientation];
+    CGImageRelease(imageRef);
+    
+    return croppedImage;
+}
+
 
 -(void)startHelpTour
 {
@@ -1056,6 +1122,21 @@
 
 #pragma mark - Free Ruler
 
+// MARK: SliderButtonAction
+- (IBAction)sliderButtonAction:(id)sender {
+    
+    CGFloat newAlpha = _opacitySlider.value;
+    
+    if (self.freeRulerView.alpha != 0) {
+        self.freeRulerView.alpha = newAlpha;
+    }
+    
+    if (self.freeProtractorView.alpha != 0) {
+        self.freeProtractorView.alpha = newAlpha;
+    }
+}
+
+//MARK: rulerPanAction
 -(void)rulerPanAction:(UIPanGestureRecognizer*)recognizer
 {
     if (recognizer.state == UIGestureRecognizerStateEnded ||
@@ -1066,6 +1147,15 @@
         
         rulerCenterInImage = [self.freeRulerView convertPoint:centerPoint toView:self.scrollContainerView.imageView];
     }
+}
+
+// MARK: Hide and show slider
+- (void)hideSlider:(UITapGestureRecognizer *)gesture {
+    self.sliderView.hidden = YES;
+}
+
+- (void)showSlider:(UITapGestureRecognizer *)gesture {
+    self.sliderView.hidden = NO;  // Show slider when tapping on freeRulerView or freeProtractorView
 }
 
 -(void)updateRulerPosition
@@ -1086,9 +1176,12 @@
     {
         [[AdManager sharedManager] loadInterstitialAd];
         [[AdManager sharedManager] showAd:self];
-        self.freeRulerView.hidden = NO;
+
+        self.freeRulerView.hidden = NO;  // Hidden ko NO karna zaroori hai
+        self.sliderView.hidden =NO;
+//        self.sliderView.alpha = 1;
     }
-    
+
     __weak typeof(self) weakSelf = self;
 
     [UIView animateWithDuration:0.2 animations:^{
@@ -1102,14 +1195,14 @@
             weakSelf.freeRulerView.transform = transform;
         }
         
-        weakSelf.freeRulerView.alpha = weakSelf.freeRulerView.alpha != 1.0?1.0:0.0;
-        [[NSUserDefaults standardUserDefaults] setBool:weakSelf.freeRulerView.alpha forKey:@"FreeHandRulerShow"];
-        [[NSUserDefaults standardUserDefaults] synchronize];
+        // Alpha toggle karna
+        weakSelf.freeRulerView.alpha = button.selected ? 1.0 : 0.0;
+        weakSelf.sliderView.alpha = button.selected ? 1.0 : 0.0;
+        
     } completion:^(BOOL finished) {
-
-        if (!button.selected)
-        {
-            weakSelf.freeRulerView.hidden = YES;
+        if (!button.selected) {
+            weakSelf.freeRulerView.hidden = YES;  // Hide tabhi hoga jab animation complete ho
+            weakSelf.sliderView.hidden = YES;
         }
     }];
 }
@@ -1145,7 +1238,9 @@
     {
         [[AdManager sharedManager] loadInterstitialAd];
         [[AdManager sharedManager] showAd:self];
-        self.freeProtractorView.hidden = NO;
+
+        self.freeProtractorView.hidden = NO; // Hidden ko NO karna zaroori hai
+        self.sliderView.hidden = NO;
     }
     
     __weak typeof(self) weakSelf = self;
@@ -1161,15 +1256,17 @@
             weakSelf.freeProtractorView.transform = transform;
         }
         
-        weakSelf.freeProtractorView.alpha = weakSelf.freeProtractorView.alpha != 1.0?1.0:0.0;
+        // Alpha toggle karna
+        weakSelf.freeProtractorView.alpha = button.selected ? 1.0 : 0.0;
+        weakSelf.sliderView.alpha = button.selected ? 1.0 : 0.0;
         
-        [[NSUserDefaults standardUserDefaults] setBool:weakSelf.freeProtractorView.alpha forKey:@"FreeProtractorShow"];
+        [[NSUserDefaults standardUserDefaults] setBool:button.selected forKey:@"FreeProtractorShow"];
         [[NSUserDefaults standardUserDefaults] synchronize];
     } completion:^(BOOL finished) {
         
-        if (!button.selected)
-        {
-            weakSelf.freeProtractorView.hidden = YES;
+        if (!button.selected) {
+            weakSelf.freeProtractorView.hidden = YES; // Hide tabhi hoga jab animation complete
+            weakSelf.sliderView.hidden = YES;
         }
     }];
 }

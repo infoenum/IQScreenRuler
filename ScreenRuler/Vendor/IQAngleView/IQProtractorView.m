@@ -564,6 +564,7 @@ typedef NS_ENUM(NSUInteger, DirectionLock) {
     _layerVerticalLine.opacity = 0.0;
     
     _layerCircle.fillColor = [_protractorColor colorWithAlphaComponent:0.1].CGColor;
+
 }
 
 -(void)switchToNormalUI
