@@ -439,8 +439,6 @@
 		4CD031F91CC165B800539151 /* ScreenRuler */ = {
 			isa = PBXGroup;
 			children = (
-				6A1AEB6A2D82B6010091B915 /* SRGetProVersionViewController.h */,
-				6A1AEB6B2D82B6010091B915 /* SRGetProVersionViewController.m */,
 				6A1AEB662D82B4610091B915 /* AdManager */,
 				4CD4267A1DA8234B000AD1CA /* Vendor */,
 				4CD426D21DA8235D000AD1CA /* Subclasses */,
@@ -707,6 +705,8 @@
 		4CD426FC1DA8236A000AD1CA /* Settings Flow */ = {
 			isa = PBXGroup;
 			children = (
+				6A1AEB6A2D82B6010091B915 /* SRGetProVersionViewController.h */,
+				6A1AEB6B2D82B6010091B915 /* SRGetProVersionViewController.m */,
 				4CD427011DA8236A000AD1CA /* Cell */,
 				4CD427081DA8236A000AD1CA /* Resources */,
 				4CD426FF1DA8236A000AD1CA /* SRAcknowledgementTableViewController.h */,
@@ -780,15 +780,6 @@
 				C5F6ABE1EFC39D370C25D1C1 /* libPods-ScreenRuler.a */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		EDAE66F82D8C8A4500F4DE4B /* AdManager */ = {
-			isa = PBXGroup;
-			children = (
-				6AD5ECD72D81633900B55BC9 /* AdManager.m */,
-				6AD5ECD42D8161A700B55BC9 /* AdManager.h */,
-			);
-			path = AdManager;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
