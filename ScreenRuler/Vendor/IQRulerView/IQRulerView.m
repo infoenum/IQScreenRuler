@@ -47,7 +47,7 @@
 
 -(void)initialize
 {    
-    self.layer.borderWidth = 1.0;
+    self.layer.borderWidth = 2.0;
     _zoomScale = 1;
     _deviceScale = 1;
 
@@ -195,7 +195,7 @@
                     CATextLayer *textLayer = [CATextLayer layer];
                     textLayer.contentsScale = [[UIScreen mainScreen] scale];
                     textLayer.font = (__bridge CFTypeRef)@"KohinoorBangla-Semibold";
-                    textLayer.fontSize = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)?16:10;
+                    textLayer.fontSize = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)?20:16;
                     textLayer.alignmentMode = kCAAlignmentCenter;
                     textLayer.string = [NSString localizedStringWithFormat:@"%.0f",i*multiplier/_deviceScale];
                     textLayer.frame = CGRectMake(currentStep-20, self.bounds.size.height/2-10, 40, 20);

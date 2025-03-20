@@ -63,6 +63,11 @@
     [self setZoomScale:zoomScale animated:NO];
 }
 
+- (void)setCurrentUnit:(MeasureUnit)currentUnit {
+    _currentUnit = currentUnit;
+    [self updateUIAnimated:NO];
+}
+
 -(void)setZoomScale:(CGFloat)zoomScale animated:(BOOL)animated
 {
     _zoomScale = zoomScale;

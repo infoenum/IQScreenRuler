@@ -418,7 +418,7 @@
                                                 <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1.5" minValue="0.29999999999999999" maxValue="1.5" translatesAutoresizingMaskIntoConstraints="NO" id="Uq2-se-S7T">
+                                            <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="1" minValue="0.10000000000000001" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="Uq2-se-S7T">
                                                 <rect key="frame" x="-2" y="30" width="284" height="16"/>
                                                 <color key="tintColor" systemColor="systemBlueColor"/>
                                                 <connections>
@@ -580,7 +580,7 @@
                                     <rect key="frame" x="60" y="4.6666666666666679" width="40" height="35"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                     <fontDescription key="fontDescription" name="KohinoorBangla-Semibold" family="Kohinoor Bangla" pointSize="16"/>
-                                    <state key="normal" title="@2x"/>
+                                    <state key="normal" title="PX"/>
                                     <userDefinedRuntimeAttributes>
                                         <userDefinedRuntimeAttribute type="color" keyPath="normalStateColor">
                                             <color key="value" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>

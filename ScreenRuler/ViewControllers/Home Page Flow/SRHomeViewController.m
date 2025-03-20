@@ -376,81 +376,62 @@
 // MARK: OPtionAction
 - (IBAction)optionAction:(UIBarButtonItem *)sender
 {
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-
-    __weak typeof(self) weakSelf = self;
-
-    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"share_photo", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-
-        [Answers logShareWithMethod:@"Share Photo" contentName:@"Share Activity" contentType:@"share" contentId:@"share.photo" customAttributes:nil];
-
-        // Take Screenshot & Crop it
-        UIImage *croppedScreenshot = [weakSelf captureCroppedScreenshot];
-
-        if (croppedScreenshot) {
-            UIActivityViewController *shareController = [[UIActivityViewController alloc] initWithActivityItems:@[croppedScreenshot] applicationActivities:nil];
-
-            shareController.excludedActivityTypes = @[
-                UIActivityTypeAssignToContact,
-                UIActivityTypeAddToReadingList,
-                UIActivityTypeOpenInIBooks,
-                UIActivityTypePostToTencentWeibo,
-                UIActivityTypePostToVimeo,
-                UIActivityTypePostToWeibo,
-                UIActivityTypePostToFacebook,
-                UIActivityTypePostToTwitter,
-                UIActivityTypePostToFlickr,
-                UIActivityTypePrint
-            ];
-
-            shareController.popoverPresentationController.barButtonItem = sender;
-            [weakSelf presentViewController:shareController animated:YES completion:nil];
-        }
-    }]];
-
-    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"start_help_tour", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-        [Answers logCustomEventWithName:@"Start Help Tour" customAttributes:nil];
-        [weakSelf startHelpTour];
-    }]];
-
-    [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"cancel", nil) style:UIAlertActionStyleCancel handler:nil]];
-    
-    alertController.popoverPresentationController.barButtonItem = sender;
-    [self presentViewController:alertController animated:YES completion:nil];
+  UIAlertController *alertController = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+  __weak typeof(self) weakSelf = self;
+  [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"share_photo", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    [Answers logShareWithMethod:@"Share Photo" contentName:@"Share Activity" contentType:@"share" contentId:@"share.photo" customAttributes:nil];
+    // Take Screenshot & Crop it
+    UIImage *croppedScreenshot = [weakSelf captureCroppedScreenshot];
+    if (croppedScreenshot) {
+      UIActivityViewController *shareController = [[UIActivityViewController alloc] initWithActivityItems:@[croppedScreenshot] applicationActivities:nil];
+      shareController.excludedActivityTypes = @[
+        UIActivityTypeAssignToContact,
+        UIActivityTypeAddToReadingList,
+        UIActivityTypeOpenInIBooks,
+        UIActivityTypePostToTencentWeibo,
+        UIActivityTypePostToVimeo,
+        UIActivityTypePostToWeibo,
+        UIActivityTypePostToFacebook,
+        UIActivityTypePostToTwitter,
+        UIActivityTypePostToFlickr,
+        UIActivityTypePrint
+      ];
+      shareController.popoverPresentationController.barButtonItem = sender;
+      [weakSelf presentViewController:shareController animated:YES completion:nil];
+    }
+  }]];
+  [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"start_help_tour", nil) style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+    [Answers logCustomEventWithName:@"Start Help Tour" customAttributes:nil];
+    [weakSelf startHelpTour];
+  }]];
+  [alertController addAction:[UIAlertAction actionWithTitle:NSLocalizedString(@"cancel", nil) style:UIAlertActionStyleCancel handler:nil]];
+  alertController.popoverPresentationController.barButtonItem = sender;
+  [self presentViewController:alertController animated:YES completion:nil];
 }
 
 // MARK: Capture Cropped Screenshot
 - (UIImage *)captureCroppedScreenshot {
-    UIWindow *keyWindow = [UIApplication sharedApplication].keyWindow;
-    UIGraphicsBeginImageContextWithOptions(keyWindow.bounds.size, NO, [UIScreen mainScreen].scale);
-    
-    [keyWindow drawViewHierarchyInRect:keyWindow.bounds afterScreenUpdates:YES];
-    UIImage *fullScreenshot = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
-    
-    if (!fullScreenshot) {
-        return nil;
-    }
-    
-    CGFloat statusBarHeight = UIApplication.sharedApplication.statusBarFrame.size.height;
-    CGFloat navBarHeight = self.navigationController.navigationBar.frame.size.height;
-    CGFloat tabBarHeight = self.tabBarController.tabBar.frame.size.height;
-    
-    CGFloat bottomInset = keyWindow.safeAreaInsets.bottom; // Notch wale devices ke liye
-
-    CGFloat cropY = statusBarHeight + navBarHeight;
-    CGFloat cropHeight = fullScreenshot.size.height - cropY - tabBarHeight - bottomInset;
-
-    CGRect cropRect = CGRectMake(0, cropY * fullScreenshot.scale, fullScreenshot.size.width * fullScreenshot.scale, cropHeight * fullScreenshot.scale);
-    
-    // Crop Screenshot
-    CGImageRef imageRef = CGImageCreateWithImageInRect(fullScreenshot.CGImage, cropRect);
-    UIImage *croppedImage = [UIImage imageWithCGImage:imageRef scale:fullScreenshot.scale orientation:fullScreenshot.imageOrientation];
-    CGImageRelease(imageRef);
-    
-    return croppedImage;
+  UIWindow *keyWindow = [UIApplication sharedApplication].keyWindow;
+  UIGraphicsBeginImageContextWithOptions(keyWindow.bounds.size, NO, [UIScreen mainScreen].scale);
+  [keyWindow drawViewHierarchyInRect:keyWindow.bounds afterScreenUpdates:YES];
+  UIImage *fullScreenshot = UIGraphicsGetImageFromCurrentImageContext();
+  UIGraphicsEndImageContext();
+  if (!fullScreenshot) {
+    return nil;
+  }
+  CGFloat statusBarHeight = UIApplication.sharedApplication.statusBarFrame.size.height;
+  CGFloat navBarHeight = self.navigationController.navigationBar.frame.size.height;
+  CGFloat tabBarHeight = self.tabBarController.tabBar.frame.size.height;
+  CGFloat bottomInset = keyWindow.safeAreaInsets.bottom; // Notch wale devices ke liye
+  CGFloat cropY = statusBarHeight + navBarHeight;
+  CGFloat cropHeight = fullScreenshot.size.height - cropY - tabBarHeight - bottomInset;
+  CGRect cropRect = CGRectMake(0, cropY * fullScreenshot.scale, fullScreenshot.size.width * fullScreenshot.scale, cropHeight * fullScreenshot.scale);
+  // Crop Screenshot
+  CGImageRef imageRef = CGImageCreateWithImageInRect(fullScreenshot.CGImage, cropRect);
+  UIImage *croppedImage = [UIImage imageWithCGImage:imageRef scale:fullScreenshot.scale orientation:fullScreenshot.imageOrientation];
+  CGImageRelease(imageRef);
+  return croppedImage;
 }
-
 
 -(void)startHelpTour
 {
@@ -1050,44 +1031,83 @@
 
 - (IBAction)ratioAction:(UIButton *)sender
 {
-    NSInteger currentRatio = [[[sender titleForState:UIControlStateNormal] substringWithRange:NSMakeRange(1, 1)] integerValue];
-    
+    NSString *currentTitle = [sender titleForState:UIControlStateNormal];
+    NSInteger currentRatio = 0;
+
+    if ([currentTitle containsString:@"px"]) {
+        currentRatio = [[currentTitle componentsSeparatedByString:@"px"][0] integerValue];
+        
+        [self.scrollContainerView.imageView setCurrentUnit: measureUnitPx];
+    } else if ([currentTitle containsString:@"cm"]) {
+        currentRatio = 38;
+        [self.scrollContainerView.imageView setCurrentUnit: measureUnitCm];
+    } else if ([currentTitle containsString:@"Inch"]) {
+        currentRatio = 96;
+        [self.scrollContainerView.imageView setCurrentUnit: measureUnitInches];
+    }
+
     UIAlertController *alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"change_scale_multiplier", nil) message:nil preferredStyle:UIAlertControllerStyleActionSheet];
     
     __weak typeof(self) weakSelf = self;
 
+    // @1px option
     if (currentRatio != 1)
     {
-        [alertController addAction:[UIAlertAction actionWithTitle:[NSString localizedStringWithFormat:@"@%dx",1] style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            
+        [alertController addAction:[UIAlertAction actionWithTitle:[NSString localizedStringWithFormat:@"%dpx",1] style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             [Answers logCustomEventWithName:@"Change Scale Multiplier" customAttributes:@{@"value":@"1"}];
 
             NSInteger selectedRatio = 1;
-            [weakSelf.ratioButton setTitle:[NSString localizedStringWithFormat:@"@%ldx",(long)selectedRatio] forState:UIControlStateNormal];
+            [weakSelf.ratioButton setTitle:[NSString localizedStringWithFormat:@"%ldpx",(long)selectedRatio] forState:UIControlStateNormal];
             weakSelf.scrollContainerView.imageView.deviceScale = weakSelf.lineFrameView.deviceScale = weakSelf.freeRulerView.deviceScale = selectedRatio;
         }]];
     }
     
+    // @2px option
     if (currentRatio != 2)
     {
-        [alertController addAction:[UIAlertAction actionWithTitle:[NSString localizedStringWithFormat:@"@%dx",2] style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [alertController addAction:[UIAlertAction actionWithTitle:[NSString localizedStringWithFormat:@"%dpx",2] style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             NSInteger selectedRatio = 2;
 
             [Answers logCustomEventWithName:@"Change Scale Multiplier" customAttributes:@{@"value":@"2"}];
 
-            [weakSelf.ratioButton setTitle:[NSString localizedStringWithFormat:@"@%ldx",(long)selectedRatio] forState:UIControlStateNormal];
+            [weakSelf.ratioButton setTitle:[NSString localizedStringWithFormat:@"%ldpx",(long)selectedRatio] forState:UIControlStateNormal];
             weakSelf.scrollContainerView.imageView.deviceScale = weakSelf.lineFrameView.deviceScale = weakSelf.freeRulerView.deviceScale = selectedRatio;
         }]];
     }
     
+    // @3px option
     if (currentRatio != 3)
     {
-        [alertController addAction:[UIAlertAction actionWithTitle:[NSString localizedStringWithFormat:@"@%dx",3] style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-
+        [alertController addAction:[UIAlertAction actionWithTitle:[NSString localizedStringWithFormat:@"%dpx",3] style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             [Answers logCustomEventWithName:@"Change Scale Multiplier" customAttributes:@{@"value":@"3"}];
 
             NSInteger selectedRatio = 3;
-            [weakSelf.ratioButton setTitle:[NSString localizedStringWithFormat:@"@%ldx",(long)selectedRatio] forState:UIControlStateNormal];
+            [weakSelf.ratioButton setTitle:[NSString localizedStringWithFormat:@"%ldpx",(long)selectedRatio] forState:UIControlStateNormal];
+            weakSelf.scrollContainerView.imageView.deviceScale = weakSelf.lineFrameView.deviceScale = weakSelf.freeRulerView.deviceScale = selectedRatio;
+        }]];
+    }
+    
+    if (currentRatio != 38)
+    {
+        [alertController addAction:[UIAlertAction actionWithTitle:@"1cm" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [Answers logCustomEventWithName:@"Change Scale Multiplier" customAttributes:@{@"value":@"38"}];
+
+            NSInteger selectedRatio = 38; // 1CM ≈ 38px (96 DPI)
+            [weakSelf.ratioButton setTitle:[NSString localizedStringWithFormat:@"1cm",(long)selectedRatio] forState:UIControlStateNormal];
+            weakSelf.freeRulerView.deviceScale = selectedRatio;
+            weakSelf.lineFrameView.deviceScale = weakSelf.freeRulerView.deviceScale;
+            weakSelf.scrollContainerView.imageView.deviceScale = weakSelf.lineFrameView.deviceScale;
+        }]];
+    }
+
+    if (currentRatio != 96)
+    {
+        [alertController addAction:[UIAlertAction actionWithTitle:@"1Inch" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [Answers logCustomEventWithName:@"Change Scale Multiplier" customAttributes:@{@"value":@"96"}];
+
+            NSInteger selectedRatio = 96; // 1 Inch ≈ 96 Pixels (96 DPI)
+
+            [weakSelf.ratioButton setTitle:[NSString localizedStringWithFormat:@"1Inch",(long)selectedRatio] forState:UIControlStateNormal];
             weakSelf.scrollContainerView.imageView.deviceScale = weakSelf.lineFrameView.deviceScale = weakSelf.freeRulerView.deviceScale = selectedRatio;
         }]];
     }
@@ -1096,8 +1116,7 @@
     
     alertController.popoverPresentationController.barButtonItem = self.rationBarButon;
     
-    [self presentViewController:alertController animated:YES completion:^{
-    }];
+    [self presentViewController:alertController animated:YES completion:nil];
 }
 
 #pragma mark - Vertical Ruler
