@@ -21,6 +21,8 @@
 
 @property (assign, nonatomic) BOOL isRequestingImage;
 @property (assign, nonatomic) BOOL isRequestShouldIgnore;
+//@property (strong, nonatomic) UIView *whiteOverlayView; // Add this line
+
 
 @end
 
