@@ -87,6 +87,7 @@
 		4CED77F21DA82A8E0093176D /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD4271D1DA82372000AD1CA /* AppDelegate.m */; };
 		4CED77F31DA82A8E0093176D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD031FB1CC165B800539151 /* main.m */; };
 		4CEDBF971DB15B970005A812 /* SRVersionTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CEDBF961DB15B970005A812 /* SRVersionTableViewCell.m */; };
+		6A1AEB6C2D82B6010091B915 /* SRGetProVersionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6A1AEB6B2D82B6010091B915 /* SRGetProVersionViewController.m */; };
 		6AD5ECD82D81633900B55BC9 /* AdManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 6AD5ECD72D81633900B55BC9 /* AdManager.m */; };
 /* End PBXBuildFile section */
 
@@ -316,6 +317,9 @@
 		4CEDBFA91DB176DE0005A812 /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; lineEnding = 0; name = ja; path = ja.lproj/Localizable.strings; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.simpleColoring; };
 		4CEDBFAA1DB176F10005A812 /* ms */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ms; path = ms.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		4CEDBFAB1DB176F10005A812 /* ms */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; lineEnding = 0; name = ms; path = ms.lproj/Localizable.strings; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.simpleColoring; };
+		6A1AEB6A2D82B6010091B915 /* SRGetProVersionViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SRGetProVersionViewController.h; sourceTree = "<group>"; };
+		6A1AEB6B2D82B6010091B915 /* SRGetProVersionViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SRGetProVersionViewController.m; sourceTree = "<group>"; };
+		6A9F8ED62D897D7600950551 /* Configuration.storekit */ = {isa = PBXFileReference; lastKnownFileType = text; path = Configuration.storekit; sourceTree = "<group>"; };
 		6AD5ECD42D8161A700B55BC9 /* AdManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AdManager.h; sourceTree = "<group>"; };
 		6AD5ECD72D81633900B55BC9 /* AdManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AdManager.m; sourceTree = "<group>"; };
 		9E8696A411D92D96E26E04BC /* Pods-ScreenRuler.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ScreenRuler.release.xcconfig"; path = "Pods/Target Support Files/Pods-ScreenRuler/Pods-ScreenRuler.release.xcconfig"; sourceTree = "<group>"; };
@@ -416,8 +420,7 @@
 		4CD031EE1CC165B700539151 = {
 			isa = PBXGroup;
 			children = (
-				6AD5ECD72D81633900B55BC9 /* AdManager.m */,
-				6AD5ECD42D8161A700B55BC9 /* AdManager.h */,
+				6A9F8ED62D897D7600950551 /* Configuration.storekit */,
 				4CD031F91CC165B800539151 /* ScreenRuler */,
 				4CD031F81CC165B700539151 /* Products */,
 				4B3C19D50E6DC8B42E00DAA4 /* Pods */,
@@ -436,6 +439,9 @@
 		4CD031F91CC165B800539151 /* ScreenRuler */ = {
 			isa = PBXGroup;
 			children = (
+				6A1AEB6A2D82B6010091B915 /* SRGetProVersionViewController.h */,
+				6A1AEB6B2D82B6010091B915 /* SRGetProVersionViewController.m */,
+				6A1AEB662D82B4610091B915 /* AdManager */,
 				4CD4267A1DA8234B000AD1CA /* Vendor */,
 				4CD426D21DA8235D000AD1CA /* Subclasses */,
 				4CD426DF1DA82364000AD1CA /* Categories */,
@@ -759,6 +765,15 @@
 			path = AssetsAndResources;
 			sourceTree = "<group>";
 		};
+		6A1AEB662D82B4610091B915 /* AdManager */ = {
+			isa = PBXGroup;
+			children = (
+				6AD5ECD72D81633900B55BC9 /* AdManager.m */,
+				6AD5ECD42D8161A700B55BC9 /* AdManager.h */,
+			);
+			path = AdManager;
+			sourceTree = "<group>";
+		};
 		6F377C7019527027C81B4199 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -996,6 +1011,7 @@
 				4CED77E61DA82A8E0093176D /* SRCropViewController.m in Sources */,
 				4CED77E71DA82A8E0093176D /* SRDrawViewController.m in Sources */,
 				4C2AAF241E27811100D4A542 /* SROnboardingNavigationController.m in Sources */,
+				6A1AEB6C2D82B6010091B915 /* SRGetProVersionViewController.m in Sources */,
 				4CED77E81DA82A8E0093176D /* SREditOptionViewController.m in Sources */,
 				4CB7CB181E0E42CB00716C63 /* IQProtractorView.m in Sources */,
 				4CED77E91DA82A8E0093176D /* SRHomeViewController.m in Sources */,

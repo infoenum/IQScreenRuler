@@ -21,6 +21,7 @@
 #import <SafariServices/SafariServices.h>
 #import "AppDelegate.h"
 #import "SRDeveloperSettingsViewController.h"
+#import "SRGetProVersionViewController.h"
 
 @interface SRSettingTableViewController ()<MFMailComposeViewControllerDelegate,SKStoreProductViewControllerDelegate>
 {
@@ -76,8 +77,9 @@
                       @{@"title":NSLocalizedString(@"social", nil),@"items":@[@{@"title":NSLocalizedString(@"share_on_social_network", nil)},@{@"title":NSLocalizedString(@"rate_us_on_app_store", nil)}]},
                       @{@"title":NSLocalizedString(@"feedback", nil),@"items":@[@{@"title":NSLocalizedString(@"feedback", nil)},@{@"title":NSLocalizedString(@"bug_report", nil)}]},
                       @{@"title":NSLocalizedString(@"terms", nil),@"items":@[@{@"title":NSLocalizedString(@"terms_and_conditions", nil),@"discloseIndicator":@YES},@{@"title":NSLocalizedString(@"open_source_libraries", nil),@"discloseIndicator":@YES}]},
-                      @{@"title":NSLocalizedString(@"debug", nil),@"items":@[@{@"title":NSLocalizedString(@"developer_options", nil),@"discloseIndicator":@YES}]}];
-    
+                      @{@"title":NSLocalizedString(@"debug", nil),@"items":@[@{@"title":NSLocalizedString(@"developer_options", nil),@"discloseIndicator":@YES}]},
+                      @{@"title":NSLocalizedString(@"Pro", nil),@"items":@[@{@"title":NSLocalizedString(@"Go with pro user", nil),@"discloseIndicator":@YES}]}
+    ];
     self.navigationItem.backBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:NSLocalizedString(@"back", nil) style:UIBarButtonItemStyleDone target:nil action:nil];
 
     NSString *openSourceString = [NSString stringWithFormat:@"%@ %@",appName,NSLocalizedString(@"is_open_source_at", nil)];
@@ -486,6 +488,12 @@
                 }
                     break;
             }
+        }
+            break;
+        case 6 :
+        {
+            SRGetProVersionViewController *add = [self.storyboard instantiateViewControllerWithIdentifier:@"SRGetProVersionViewController"];
+            [self presentViewController:add animated:YES completion:nil];
         }
             break;
     }

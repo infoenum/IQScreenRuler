@@ -13,8 +13,11 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype)sharedManager;
 
 // Methods to load and show interstitial ads
+@property (nonatomic, assign) BOOL isSubscribed;
+
 - (void)loadInterstitialAd;
 - (void)showAd:(UIViewController *)viewController;
+- (void)saveSubscriptionStatus;
 
 @end
 

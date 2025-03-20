@@ -17,8 +17,18 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         sharedInstance = [[self alloc] init];
+        [sharedInstance loadSubscriptionStatus];
     });
     return sharedInstance;
+}
+
+- (void)loadSubscriptionStatus {
+    self.isSubscribed = [[NSUserDefaults standardUserDefaults] boolForKey:@"isSubscribed"];
+}
+
+- (void)saveSubscriptionStatus {
+    [[NSUserDefaults standardUserDefaults] setBool:self.isSubscribed forKey:@"isSubscribed"];
+    [[NSUserDefaults standardUserDefaults] synchronize];  // Make sure it's saved immediately
 }
 
 - (void)loadInterstitialAd {
@@ -36,16 +46,15 @@
 }
 
 - (void)showAd:(UIViewController *)viewController {
-    if (self.interstitial) {
+
+    if (self.interstitial && !self.isSubscribed) {
         [self.interstitial presentFromRootViewController:viewController];
     } else {
         NSLog(@"Interstitial ad is not ready yet.");
         [self loadInterstitialAd];
     }
 }
-//- (void)hideAd {
-//    self.bannerView.hidden = YES;
-//}
+
 
 #pragma mark - GADInterstitialAdDelegate Methods
 
