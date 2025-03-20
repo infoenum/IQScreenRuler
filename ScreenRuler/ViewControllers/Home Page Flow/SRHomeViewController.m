@@ -1155,7 +1155,7 @@
 }
 
 - (void)showSlider:(UITapGestureRecognizer *)gesture {
-    self.sliderView.hidden = NO;  // Show slider when tapping on freeRulerView or freeProtractorView
+    self.sliderView.hidden = NO;
 }
 
 -(void)updateRulerPosition
@@ -1177,9 +1177,8 @@
         [[AdManager sharedManager] loadInterstitialAd];
         [[AdManager sharedManager] showAd:self];
 
-        self.freeRulerView.hidden = NO;  // Hidden ko NO karna zaroori hai
-        self.sliderView.hidden =NO;
-//        self.sliderView.alpha = 1;
+        self.freeRulerView.hidden = NO;
+        self.sliderView.hidden = NO;
     }
 
     __weak typeof(self) weakSelf = self;
@@ -1195,14 +1194,16 @@
             weakSelf.freeRulerView.transform = transform;
         }
         
-        // Alpha toggle karna
         weakSelf.freeRulerView.alpha = button.selected ? 1.0 : 0.0;
-        weakSelf.sliderView.alpha = button.selected ? 1.0 : 0.0;
+        weakSelf.sliderView.alpha = (weakSelf.freeRulerView.alpha == 1.0 || weakSelf.freeProtractorView.alpha == 1.0) ? 1.0 : 0.0;
         
     } completion:^(BOOL finished) {
         if (!button.selected) {
-            weakSelf.freeRulerView.hidden = YES;  // Hide tabhi hoga jab animation complete ho
-            weakSelf.sliderView.hidden = YES;
+            weakSelf.freeRulerView.hidden = YES;
+
+            if (weakSelf.freeProtractorView.hidden) {
+                weakSelf.sliderView.hidden = YES;
+            }
         }
     }];
 }
@@ -1239,7 +1240,7 @@
         [[AdManager sharedManager] loadInterstitialAd];
         [[AdManager sharedManager] showAd:self];
 
-        self.freeProtractorView.hidden = NO; // Hidden ko NO karna zaroori hai
+        self.freeProtractorView.hidden = NO;
         self.sliderView.hidden = NO;
     }
     
@@ -1256,17 +1257,19 @@
             weakSelf.freeProtractorView.transform = transform;
         }
         
-        // Alpha toggle karna
         weakSelf.freeProtractorView.alpha = button.selected ? 1.0 : 0.0;
-        weakSelf.sliderView.alpha = button.selected ? 1.0 : 0.0;
+        weakSelf.sliderView.alpha = (weakSelf.freeRulerView.alpha == 1.0 || weakSelf.freeProtractorView.alpha == 1.0) ? 1.0 : 0.0;
         
         [[NSUserDefaults standardUserDefaults] setBool:button.selected forKey:@"FreeProtractorShow"];
         [[NSUserDefaults standardUserDefaults] synchronize];
     } completion:^(BOOL finished) {
         
         if (!button.selected) {
-            weakSelf.freeProtractorView.hidden = YES; // Hide tabhi hoga jab animation complete
-            weakSelf.sliderView.hidden = YES;
+            weakSelf.freeProtractorView.hidden = YES;
+
+            if (weakSelf.freeRulerView.hidden) {
+                weakSelf.sliderView.hidden = YES;
+            }
         }
     }];
 }
