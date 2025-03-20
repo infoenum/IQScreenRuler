@@ -416,8 +416,6 @@
 		4CD031EE1CC165B700539151 = {
 			isa = PBXGroup;
 			children = (
-				6AD5ECD72D81633900B55BC9 /* AdManager.m */,
-				6AD5ECD42D8161A700B55BC9 /* AdManager.h */,
 				4CD031F91CC165B800539151 /* ScreenRuler */,
 				4CD031F81CC165B700539151 /* Products */,
 				4B3C19D50E6DC8B42E00DAA4 /* Pods */,
@@ -436,6 +434,7 @@
 		4CD031F91CC165B800539151 /* ScreenRuler */ = {
 			isa = PBXGroup;
 			children = (
+				EDAE66F82D8C8A4500F4DE4B /* AdManager */,
 				4CD4267A1DA8234B000AD1CA /* Vendor */,
 				4CD426D21DA8235D000AD1CA /* Subclasses */,
 				4CD426DF1DA82364000AD1CA /* Categories */,
@@ -765,6 +764,15 @@
 				C5F6ABE1EFC39D370C25D1C1 /* libPods-ScreenRuler.a */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		EDAE66F82D8C8A4500F4DE4B /* AdManager */ = {
+			isa = PBXGroup;
+			children = (
+				6AD5ECD72D81633900B55BC9 /* AdManager.m */,
+				6AD5ECD42D8161A700B55BC9 /* AdManager.h */,
+			);
+			path = AdManager;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
