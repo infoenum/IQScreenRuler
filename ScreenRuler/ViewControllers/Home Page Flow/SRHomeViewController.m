@@ -1328,7 +1328,7 @@
     if (self.magnifyingGlass.window == nil)
     {
         self.magnifyingGlass.touchPoint = originalLocation;
-        self.topColorView.frame = CGRectMake(0, 0, self.navigationController.view.bounds.size.width, self.navigationController.navigationBar.bounds.size.height);
+        self.topColorView.frame = CGRectMake(0, 0, self.navigationController.view.bounds.size.width, 80);
         [self.navigationController.view insertSubview:self.topColorView aboveSubview:self.navigationController.navigationBar];
         [self.view insertSubview:self.magnifyingGlass aboveSubview:self.lineFrameView];
         [self.magnifyingGlass show];
@@ -1337,9 +1337,8 @@
             weakSelf.topColorView.alpha = 1.0;
         } completion:NULL];
     }
-    else
-    {
-        self.topColorView.frame = CGRectMake(0, 0, self.navigationController.view.bounds.size.width, self.navigationController.navigationBar.bounds.size.height);
+    else {
+        self.topColorView.frame = CGRectMake(0, 0, self.navigationController.view.bounds.size.width, 100);
 
         [UIView animateWithDuration:0.1 delay:0.0 options:UIViewAnimationOptionBeginFromCurrentState animations:^{
             weakSelf.magnifyingGlass.touchPoint = originalLocation;
@@ -1382,19 +1381,19 @@
             
             if ([color isDarkColor])
             {
-                weakSelf.labelRed.textColor             = [UIColor blackColor];
-                weakSelf.labelGreen.textColor           = [UIColor blackColor];
-                weakSelf.labelBlue.textColor            = [UIColor blackColor];
-                weakSelf.labelColorLocation.textColor   = [UIColor blackColor];
-                weakSelf.viewColorLabelContainer.backgroundColor =  [UIColor colorWithWhite:1 alpha:0.9];
+                weakSelf.labelRed.textColor             = [UIColor colorWithWhite:0.0 alpha:0.9];
+                weakSelf.labelGreen.textColor           = [UIColor colorWithWhite:0.0 alpha:0.9];
+                weakSelf.labelBlue.textColor            = [UIColor colorWithWhite:0.0 alpha:0.9];
+                weakSelf.labelColorLocation.textColor   = [UIColor colorWithWhite:0.0 alpha:0.9];
+                weakSelf.viewColorLabelContainer.backgroundColor =  [UIColor colorWithWhite:0.9 alpha:0.9];// Lighter background for dark colors
             }
             else
             {
-                weakSelf.labelRed.textColor             = [UIColor whiteColor];
-                weakSelf.labelGreen.textColor           = [UIColor whiteColor];
-                weakSelf.labelBlue.textColor            = [UIColor whiteColor];
-                weakSelf.labelColorLocation.textColor   = [UIColor whiteColor];
-                weakSelf.viewColorLabelContainer.backgroundColor =  [UIColor colorWithWhite:0 alpha:0.7];
+                weakSelf.labelRed.textColor             = [UIColor colorWithWhite:0.9 alpha:0.9];
+                weakSelf.labelGreen.textColor           = [UIColor colorWithWhite:0.9 alpha:0.9];
+                weakSelf.labelBlue.textColor            = [UIColor colorWithWhite:0.9 alpha:0.9];
+                weakSelf.labelColorLocation.textColor   = [UIColor colorWithWhite:0.9 alpha:0.9];
+                weakSelf.viewColorLabelContainer.backgroundColor =  [UIColor colorWithWhite:0.0 alpha:0.9];// Darker background for light colors
             }
             
         } completion:NULL];
@@ -1457,7 +1456,8 @@
             [Answers logCustomEventWithName:@"Show RGB" customAttributes:nil];
         }
 
-        [self showRGBAtLocation:location];
+        CGPoint magnifyingGlassCenter = CGPointMake(location.x, location.y);
+        [self showRGBAtLocation:magnifyingGlassCenter];
     }
     else
     {

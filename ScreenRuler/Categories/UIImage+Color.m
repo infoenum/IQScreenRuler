@@ -65,6 +65,59 @@ static char kPixelData;
     }
 }
 
++(UIImage *)createMultiColorImageForAlphaInfo:(CGImageAlphaInfo)alphaInfo {
+
+    // Image size
+    CGFloat width = 200;
+    CGFloat height = 200;
+
+    // Create a color space (Device RGB)
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+
+    // Create a CGContext with the selected alphaInfo
+    CGContextRef context = CGBitmapContextCreate(NULL,
+                                                 width,
+                                                 height,
+                                                 8, // Bits per component
+                                                 4 * width, // Bytes per row
+                                                 colorSpace,
+                                                 alphaInfo);
+    if (context == NULL) {
+        CGColorSpaceRelease(colorSpace);
+        return nil;
+    }
+
+    // Create a gradient with multiple colors (Red, Green, Blue, Yellow)
+    NSArray *colors = @[
+        (id)[UIColor redColor].CGColor,
+        (id)[UIColor greenColor].CGColor,
+        (id)[UIColor blueColor].CGColor,
+        (id)[UIColor yellowColor].CGColor
+    ];
+    CGFloat locations[] = { 0.0, 0.33, 0.66, 1.0 };
+
+    CGGradientRef gradient = CGGradientCreateWithColors(colorSpace, (__bridge CFArrayRef)colors, locations);
+
+    // Draw the gradient
+    CGContextDrawLinearGradient(context, gradient,
+                                CGPointMake(0, 0), CGPointMake(width, height),
+                                0);  // Draws from top-left to bottom-right
+
+    // Create CGImage from the context
+    CGImageRef cgImage = CGBitmapContextCreateImage(context);
+
+    // Clean up
+    CGContextRelease(context);
+    CGColorSpaceRelease(colorSpace);
+    CGGradientRelease(gradient);
+
+    // Return UIImage
+    UIImage *image = [UIImage imageWithCGImage:cgImage];
+    CGImageRelease(cgImage);
+
+    return image;
+}
+
 -(void)colorAtPoint:(CGPoint)point preparingBlock:(void (^)(void))preparingBlock completion:(void (^)(UIColor*))colorCompletion
 {
     if (point.x <= 0 || point.y <= 0 || point.x > self.size.width || point.y > self.size.height)
@@ -80,55 +133,88 @@ static char kPixelData;
         __weak typeof(self) weakSelf = self;
 
         void(^getColorBlock)(const UInt8* data) = ^(const UInt8* data){
+            CGImageRef imageRef = weakSelf.CGImage;
+            int bytesPerComponent = (int)CGImageGetBitsPerComponent(imageRef)/8;
+            size_t bytesPerPixel = CGImageGetBitsPerPixel(imageRef)/8;
+            CGImageAlphaInfo alphaInfo = CGImageGetAlphaInfo(imageRef);
+
+            NSInteger columnIndex = ceilf(point.x)-1;
+            NSInteger rowIndex = ceilf(point.y)-1;
             
-            int numberOfColorComponents = 4; // R,G,B, and A
-            NSInteger pointX = ceilf(point.x)-1;
-            NSInteger pointY = ceilf(point.y)-1;
-            
-            float w = weakSelf.size.width;
-            int pixelInfo = ((w * pointY) + pointX) * numberOfColorComponents;
-            
-            int red = 0;
-            int green = 0;
-            int blue = 0;
-            int alpha = 255;
-            
-            switch (CGImageGetAlphaInfo(weakSelf.CGImage))
+            float width = weakSelf.size.width;
+            int pixelInfo = ((width * rowIndex) + columnIndex) * bytesPerPixel;
+
+            int redIndex = -1;
+            int greenIndex = -1;
+            int blueIndex = -1;
+            int alphaIndex = -1;
+
+            int indexShift = bytesPerComponent - 1;
+            switch (alphaInfo)
             {
                 case kCGImageAlphaNone:
                 case kCGImageAlphaNoneSkipLast:
-                    red     = data[pixelInfo + 0];
-                    green   = data[pixelInfo + 1];
-                    blue    = data[pixelInfo + 2];
+                    redIndex = 0 * bytesPerComponent + indexShift;
+                    greenIndex = 1 * bytesPerComponent + indexShift;
+                    blueIndex = 2 * bytesPerComponent + indexShift;
                     break;
                 case kCGImageAlphaPremultipliedLast:
                 case kCGImageAlphaLast:
-                    red     = data[pixelInfo + 0];
-                    green   = data[pixelInfo + 1];
-                    blue    = data[pixelInfo + 2];
-                    alpha   = data[pixelInfo + 3];
+                    redIndex = 0 * bytesPerComponent + indexShift;
+                    greenIndex = 1 * bytesPerComponent + indexShift;
+                    blueIndex = 2 * bytesPerComponent + indexShift;
+                    alphaIndex = 3 * bytesPerComponent + indexShift;
                     break;
                 case kCGImageAlphaPremultipliedFirst:
                 case kCGImageAlphaFirst:
-                    alpha   = data[pixelInfo + 0];
+                    alphaIndex = 0 * bytesPerComponent + indexShift;
+                    redIndex = 1 * bytesPerComponent + indexShift;
+                    greenIndex = 2 * bytesPerComponent + indexShift;
+                    blueIndex = 3 * bytesPerComponent + indexShift;
+                    break;
                 case kCGImageAlphaNoneSkipFirst:
-                    red     = data[pixelInfo + 1];
-                    green   = data[pixelInfo + 2];
-                    blue    = data[pixelInfo + 3];
+                    redIndex = 1 * bytesPerComponent + indexShift;
+                    greenIndex = 2 * bytesPerComponent + indexShift;
+                    blueIndex = 3 * bytesPerComponent + indexShift;
                     break;
                 case kCGImageAlphaOnly:
-                    alpha   = data[pixelInfo + 0];
+                    alphaIndex = 0 * bytesPerComponent + indexShift;
                     break;
-                    
                 default:
                     break;
             }
-            
+
+            CGFloat red = 0;
+            CGFloat green = 0;
+            CGFloat blue = 0;
+            CGFloat alpha = 1.0;
+
+            if (redIndex >= 0) {
+                int color = data[pixelInfo + redIndex];
+                CGFloat floatValue = color / 255.0;
+                red = floatValue;
+            }
+            if (greenIndex >= 0) {
+                int color = data[pixelInfo + greenIndex];
+                CGFloat floatValue = color / 255.0;
+                green = floatValue;
+            }
+            if (blueIndex >= 0) {
+                int color = data[pixelInfo + blueIndex];
+                CGFloat floatValue = color / 255.0;
+                blue = floatValue;
+            }
+            if (alphaIndex >= 0) {
+                int color = data[pixelInfo + alphaIndex];
+                CGFloat floatValue = color / 255.0;
+                alpha = floatValue;
+            }
+
             // RGBA values range from 0 to 255
-            UIColor *color = [UIColor colorWithRed:red/255.0
-                                   green:green/255.0
-                                    blue:blue/255.0
-                                   alpha:alpha/255.0];
+            UIColor *color = [UIColor colorWithRed:red
+                                   green:green
+                                    blue:blue
+                                   alpha:alpha];
             
             if (colorCompletion)
             {

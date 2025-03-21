@@ -472,7 +472,6 @@
 				4C853B5D1DB39729003E3717 /* DebugHelper */,
 				4C853B411DB29309003E3717 /* Classes */,
 				4CD4267B1DA8234B000AD1CA /* ACMagnifyingGlass */,
-				4CD426801DA8234B000AD1CA /* IQAngleView */,
 				4CD426831DA8234B000AD1CA /* IQColorPicker */,
 				4CD4268F1DA8234B000AD1CA /* IQCropperView */,
 				4CD426961DA8234B000AD1CA /* IQGeometry */,
@@ -524,6 +523,7 @@
 				4CD4268C1DA8234B000AD1CA /* IQTextPickerButton.m */,
 				4CD4268D1DA8234B000AD1CA /* UIColor+HexColors.h */,
 				4CD4268E1DA8234B000AD1CA /* UIColor+HexColors.m */,
+				4CD426801DA8234B000AD1CA /* IQAngleView */,
 			);
 			path = IQColorPicker;
 			sourceTree = "<group>";
@@ -780,6 +780,15 @@
 				C5F6ABE1EFC39D370C25D1C1 /* libPods-ScreenRuler.a */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		EA4DE9362D8D2FDF00B0E1A6 /* AdManager */ = {
+			isa = PBXGroup;
+			children = (
+				6AD5ECD72D81633900B55BC9 /* AdManager.m */,
+				6AD5ECD42D8161A700B55BC9 /* AdManager.h */,
+			);
+			path = AdManager;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -1267,7 +1276,7 @@
 				DEVELOPMENT_TEAM = "";
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 7UUTF6T5P9;
 				INFOPLIST_FILE = ScreenRuler/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.infoenum.ruler;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1289,7 +1298,7 @@
 				DEVELOPMENT_TEAM = 7UUTF6T5P9;
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = 7UUTF6T5P9;
 				INFOPLIST_FILE = ScreenRuler/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.infoenum.ruler;
 				PRODUCT_NAME = "$(TARGET_NAME)";

@@ -31,7 +31,7 @@ static inline float radians(double degrees) { return degrees * M_PI / 180; }
     CGFloat radius = self.bounds.size.width / 2;
     
     // Get the graphics context and clear it
-    if(context == nil)
+//    if(context == nil)
         context = UIGraphicsGetCurrentContext();
     CGContextClearRect(context, rect);
     

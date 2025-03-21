@@ -16,4 +16,6 @@
 
 -(void)colorAtPoint:(CGPoint)point preparingBlock:(void (^)(void))preparingBlock completion:(void (^)(UIColor*))colorCompletion;
 
++(UIImage *)createMultiColorImageForAlphaInfo:(CGImageAlphaInfo)alphaInfo;
+
 @end
