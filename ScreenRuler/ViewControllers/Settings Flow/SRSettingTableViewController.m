@@ -127,16 +127,9 @@
     
     [Answers logCustomEventWithName:@"Theme Changed" customAttributes:nil];
 
-    __weak typeof(self) weakSelf = self;
+    sender.tintColor = [UIColor themeColor];
 
-    [UIView animateWithDuration:0.2 animations:^{
-        weakSelf.navigationController.navigationBar.barTintColor = [UIColor themeColor];
-        weakSelf.navigationController.navigationBar.tintColor = [UIColor themeTextColor];
-        weakSelf.navigationController.navigationBar.barStyle = ![UIColor isThemeInverted];
-        [weakSelf.tableView reloadData];
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"ThemeChangedNotification" object:nil];
-
-    }];
+    [self updateNavigationBarUI];
 }
 
 - (IBAction)segmentColorAction:(UISegmentedControl *)sender
@@ -145,14 +138,31 @@
 
     [Answers logCustomEventWithName:@"Theme Inverted" customAttributes:@{@"Inverted":@(sender.selectedSegmentIndex)}];
 
+    sender.tintColor = [UIColor themeColor];
+
+    [self updateNavigationBarUI];
+}
+
+-(void) updateNavigationBarUI {
     __weak typeof(self) weakSelf = self;
 
-    [UIView animateWithDuration:0.2 animations:^{
+    dispatch_async(dispatch_get_main_queue(), ^{
+        UINavigationBarAppearance *appearance = [[UINavigationBarAppearance alloc] init];
+        [appearance configureWithDefaultBackground];
+        appearance.backgroundColor = [UIColor themeColor];
+        weakSelf.navigationController.navigationBar.standardAppearance = appearance;
+        weakSelf.navigationController.navigationBar.scrollEdgeAppearance = appearance;
+        if (@available(iOS 15.0, *)) {
+            weakSelf.navigationController.navigationBar.compactScrollEdgeAppearance = appearance;
+        }
+
         weakSelf.navigationController.navigationBar.barTintColor = [UIColor themeColor];
-        weakSelf.navigationController.navigationBar.tintColor = [UIColor themeTextColor];
-        weakSelf.navigationController.navigationBar.barStyle = ![UIColor isThemeInverted];
-        sender.tintColor = [UIColor originalThemeColor];
-    }];
+        weakSelf.navigationController.navigationBar.tintColor = [UIColor themeColor];
+        weakSelf.navigationController.navigationBar.barStyle = ![UIColor themeColor];
+
+        [weakSelf.navigationController.navigationBar setNeedsDisplay];
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"ThemeChangedNotification" object:nil];
+    });
 }
 
 -(void)showZoomOptionAction:(UISwitch*)aSwitch
