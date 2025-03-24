@@ -31,6 +31,8 @@
     [self requestProductInfo];
     self.backButton.tintColor = [UIColor themeColor];
     [self setViewSubscription];
+
+    [[SKPaymentQueue defaultQueue] addTransactionObserver:self];
 }
 
 - (void)setViewSubscription {
@@ -80,6 +82,10 @@
 
 
     [self setSelectedProductForYearlySubscription];
+}
+
+- (IBAction)restoreButtonTapped:(id)sender {
+    [[SKPaymentQueue defaultQueue] restoreCompletedTransactions];
 }
 
 - (void)setSelectedProductForMonthlySubscription {
@@ -164,6 +170,27 @@
     [[AdManager sharedManager] saveSubscriptionStatus];
     [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
     [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)paymentQueueRestoreCompletedTransactionsFinished:(SKPaymentQueue *)queue {
+    // This method will be called when the restoration is successful
+    for (SKPaymentTransaction *transaction in queue.transactions) {
+        // Process the restored transaction here
+        // You can check the product identifier to handle different purchases
+        NSLog(@"Restored product: %@", transaction.payment.productIdentifier);
+
+        // Complete the transaction
+        [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
+    }
+}
+
+- (void)paymentQueue:(SKPaymentQueue *)queue restoreCompletedTransactionsFailedWithError:(NSError *)error {
+    NSLog(@"Failed to restore purchases: %@", error.localizedDescription);
+}
+
+- (void)paymentQueue:restoreCompletedTransactionsFailedWithError:(SKPaymentQueue *)queue error:(NSError *)error {
+    // Handle the error if the restoration fails
+    NSLog(@"Failed to restore purchases: %@", error.localizedDescription);
 }
 
 - (void)dealloc {
