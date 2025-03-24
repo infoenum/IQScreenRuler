@@ -254,6 +254,14 @@
     } else {
         self.sliderView.alpha = 0;
     }
+
+    self.ratioButton.layer.cornerRadius = 3.0;
+    self.ratioButton.layer.masksToBounds = YES;
+    [self.ratioButton setTitleColor:[UIColor themeTextColor] forState:UIControlStateNormal];
+    [self.ratioButton setTitleColor:[UIColor blackColor] forState:UIControlStateSelected];
+    [self.ratioButton setTitleColor:[UIColor themeTextColor] forState:UIControlStateHighlighted];
+    self.ratioButton.tintColor = [UIColor themeTextColor];
+
 }
 
 -(void)viewWillAppear:(BOOL)animated
@@ -293,14 +301,39 @@
     
     __weak typeof(self) weakSelf = self;
 
+    // Force update navigation bar and toolbar appearance
+    UINavigationBarAppearance *navAppearance = [[UINavigationBarAppearance alloc] init];
+    [navAppearance configureWithDefaultBackground];
+    navAppearance.backgroundColor = [UIColor themeColor];
+
+    UIToolbarAppearance *toolbarAppearance = [[UIToolbarAppearance alloc] init];
+    [toolbarAppearance configureWithDefaultBackground];
+    toolbarAppearance.backgroundColor = [UIColor themeColor];
+
     [UIView animateWithDuration:0.2 animations:^{
+        // Update navigation bar
+        weakSelf.navigationController.navigationBar.standardAppearance = navAppearance;
+        weakSelf.navigationController.navigationBar.scrollEdgeAppearance = navAppearance;
         weakSelf.navigationController.navigationBar.barTintColor = [UIColor themeColor];
         weakSelf.navigationController.navigationBar.tintColor = [UIColor themeTextColor];
         weakSelf.navigationController.navigationBar.barStyle = ![UIColor isThemeInverted];
+
+        // Update toolbar
+        weakSelf.navigationController.toolbar.standardAppearance = toolbarAppearance;
+        weakSelf.navigationController.toolbar.scrollEdgeAppearance = toolbarAppearance;
         weakSelf.navigationController.toolbar.barTintColor = [UIColor themeColor];
         weakSelf.navigationController.toolbar.tintColor = [UIColor themeTextColor];
         weakSelf.navigationController.toolbar.barStyle = ![UIColor isThemeInverted];
-    }];
+
+        // Force update all buttons' tintColor
+        weakSelf.sideRulerButton.tintColor = [UIColor themeTextColor];
+        weakSelf.freeHandButton.tintColor = [UIColor themeTextColor];
+        weakSelf.protractorButton.tintColor = [UIColor themeTextColor];
+        weakSelf.straighenButton.tintColor = [UIColor themeTextColor];
+        weakSelf.ratioButton.tintColor = [UIColor themeTextColor];
+        weakSelf.editOptionBarButton.tintColor = [UIColor themeTextColor];
+
+        }];
 
 }
 
@@ -317,16 +350,6 @@
 -(BOOL)prefersStatusBarHidden
 {
     return NO;
-}
-
--(UIStatusBarAnimation)preferredStatusBarUpdateAnimation
-{
-    return UIStatusBarAnimationSlide;
-}
-
--(UIImage*)image
-{
-    return self.scrollContainerView.image;
 }
 
 -(void)setImage:(UIImage*)image
