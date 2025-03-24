@@ -32,9 +32,9 @@
 }
 
 - (void)loadInterstitialAd {
-//#if DEBUG
-//    
-//#else
+#if DEBUG
+    
+#else
     [GADInterstitialAd
        loadWithAdUnitID:@"ca-app-pub-4071068218793215/1611921991"
                 request:[GADRequest request]
@@ -46,13 +46,13 @@
         self.interstitial = ad;
         self.interstitial.fullScreenContentDelegate = self;  
     }];
-//#endif
+#endif
 }
 
 - (void)showAd:(UIViewController *)viewController {
-//#if DEBUG
-//    
-//#else
+#if DEBUG
+    
+#else
     if (self.interstitial && !self.isSubscribed) {
         [self.interstitial presentFromRootViewController:viewController];
     } else {
@@ -60,7 +60,7 @@
         [self loadInterstitialAd];
     }
     
-//#endif
+#endif
 }
 
 
