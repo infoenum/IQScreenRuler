@@ -9,10 +9,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface AdManager : NSObject
 
-// Singleton method to get the shared instance of AdManager
 + (instancetype)sharedManager;
 
-// Methods to load and show interstitial ads
 @property (nonatomic, assign) BOOL isSubscribed;
 
 - (void)loadInterstitialAd;

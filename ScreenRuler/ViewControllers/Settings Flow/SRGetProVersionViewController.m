@@ -24,17 +24,17 @@
 
 @implementation SRGetProVersionViewController
 
+const NSString *productIdentifier = @"com.infoenum.ruler_non_consumable";
+
 - (void)viewDidLoad {
     [super viewDidLoad];
 
-    self.subscriptionButton.enabled = NO;
-    [self requestProductInfo];
     self.backButton.tintColor = [UIColor themeColor];
-    [self setViewSubscription];
 
     [[SKPaymentQueue defaultQueue] addTransactionObserver:self];
+    [self requestProductInfo];
+    [self setViewSubscription];
 }
-
 - (void)setViewSubscription {
     self.monthlySubscriptionView.layer.masksToBounds = false;
     self.monthlySubscriptionView.layer.shadowOpacity = 0.2;
@@ -50,63 +50,20 @@
 }
 
 - (void)requestProductInfo {
-    NSSet *productIdentifiers = [NSSet setWithObjects:@"com.infoenum.ruler_for_1_month", @"com.infoenum.ruler_for_1_year", nil];
+    NSSet *productIdentifiers = [NSSet setWithObject: productIdentifier];
     self.productsRequest = [[SKProductsRequest alloc] initWithProductIdentifiers:productIdentifiers];
     self.productsRequest.delegate = self;
     [self.productsRequest start];
 }
 
 - (void)productsRequest:(SKProductsRequest *)request didReceiveResponse:(SKProductsResponse *)response {
-    if (response.products.count > 0) {
-        self.availableProducts = response.products;
+    self.availableProducts = response.products;
+
+    if (self.availableProducts.count > 0) {
+        self.selectedProduct = self.availableProducts.firstObject;
+        NSLog(@"Product is available: %@", self.selectedProduct.localizedTitle);
     } else {
-        NSLog(@"No products found");
-    }
-}
-
-- (IBAction)monthlyViewTapped:(id)sender {
-    self.subscriptionButton.enabled = YES;
-    self.yearlySubscriptionView.layer.borderColor = [UIColor blackColor].CGColor;
-    [self.subscriptionButton setTitle:@"Monthly Subscription" forState:UIControlStateNormal];
-    self.monthlySubscriptionView.layer.borderColor = [UIColor greenColor].CGColor;
-
-
-    [self setSelectedProductForMonthlySubscription];
-}
-
-- (IBAction)yearlyViewTapped:(id)sender {
-    self.subscriptionButton.enabled = YES;
-    self.monthlySubscriptionView.layer.borderColor = [UIColor blackColor].CGColor;
-    [self.subscriptionButton setTitle:@"Yearly Subscription" forState:UIControlStateNormal];
-    self.yearlySubscriptionView.layer.borderColor = [UIColor greenColor].CGColor;
-
-
-    [self setSelectedProductForYearlySubscription];
-}
-
-- (IBAction)restoreButtonTapped:(id)sender {
-    [[SKPaymentQueue defaultQueue] restoreCompletedTransactions];
-}
-
-- (void)setSelectedProductForMonthlySubscription {
-
-    self.selectedProduct = nil;
-    for (SKProduct *product in self.availableProducts) {
-        if ([product.productIdentifier isEqualToString:@"com.infoenum.ruler_for_1_month"]) {
-            self.selectedProduct = product;
-            break;
-        }
-    }
-}
-
-- (void)setSelectedProductForYearlySubscription {
-
-    self.selectedProduct = nil;
-    for (SKProduct *product in self.availableProducts) {
-        if ([product.productIdentifier isEqualToString:@"com.infoenum.ruler_for_1_year"]) {
-            self.selectedProduct = product;
-            break;
-        }
+        NSLog(@"Product not found");
     }
 }
 
@@ -119,83 +76,140 @@
     }
 }
 
-- (IBAction)backButtonTapped:(UIButton *)sender {
+
+
+- (void)handlePurchasedTransaction:(SKPaymentTransaction *)transaction {
+    NSLog(@"Purchase successful: %@", transaction.payment.productIdentifier);
+    [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
+
+    [AdManager sharedManager].isSubscribed = YES;
+    [[AdManager sharedManager] saveSubscriptionStatus];
+
+    [self dismissViewControllerAnimated:YES completion:nil];
+
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Purchase Successful"
+                                                                   message:@"You have successfully purchased the Pro version."
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *action = [UIAlertAction actionWithTitle:@"OK"
+                                                     style:UIAlertActionStyleDefault
+                                                   handler:nil];
+    [alert addAction:action];
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
+- (void)handleFailedTransaction:(SKPaymentTransaction *)transaction {
+    NSLog(@"Purchase failed: %@", transaction.error.localizedDescription);
+    [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
+
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Purchase Failed"
+                                                                   message:transaction.error.localizedDescription
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *action = [UIAlertAction actionWithTitle:@"OK"
+                                                     style:UIAlertActionStyleDefault
+                                                   handler:nil];
+    [alert addAction:action];
+    [self presentViewController:alert animated:YES completion:nil];
+}
+
+
+- (void)handleRestoredTransaction:(SKPaymentTransaction *)transaction {
+
+    if (transaction.transactionState == SKPaymentTransactionStateRestored) {
+
+        if (![transaction.payment.productIdentifier isEqualToString: productIdentifier]) {
+            UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"No Previous Purchases"
+                                                                           message:@"You have not made any previous purchases to restore."
+                                                                    preferredStyle:UIAlertControllerStyleAlert];
+            UIAlertAction *action = [UIAlertAction actionWithTitle:@"OK"
+                                                             style:UIAlertActionStyleDefault
+                                                           handler:nil];
+            [alert addAction:action];
+            [self presentViewController:alert animated:YES completion:nil];
+            return;
+        }
+    }
+
+    NSLog(@"Transaction restored: %@", transaction.payment.productIdentifier);
+    [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
+
+    [AdManager sharedManager].isSubscribed = YES;
+    [[AdManager sharedManager] saveSubscriptionStatus];
+
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Content Restored"
+                                                                   message:@"Your previous purchase has been restored."
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *action = [UIAlertAction actionWithTitle:@"OK"
+                                                     style:UIAlertActionStyleDefault
+                                                   handler:^(UIAlertAction * _Nonnull action) {
+                                                       [self dismissViewControllerAnimated:YES completion:nil];
+                                                   }];
+    [alert addAction:action];
+    [self presentViewController:alert animated:YES completion:nil];
+}
+- (IBAction)crossButtonAction:(id)sender {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
+- (IBAction)restorePurchasesButtonTapped:(id)sender {
+    [[SKPaymentQueue defaultQueue] restoreCompletedTransactions];
+}
+- (IBAction)backButton:(id)sender {
+    [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+
+// new Delegate method-24 - 3- 2025
 - (void)paymentQueue:(SKPaymentQueue *)queue updatedTransactions:(NSArray<SKPaymentTransaction *> *)transactions {
     for (SKPaymentTransaction *transaction in transactions) {
         switch (transaction.transactionState) {
             case SKPaymentTransactionStatePurchased:
-                [self handlePurchaseSuccessForTransaction:transaction];
+                [self handlePurchasedTransaction:transaction];
                 break;
-
             case SKPaymentTransactionStateFailed:
-                [self handlePurchaseFailureForTransaction:transaction];
+                [self handleFailedTransaction:transaction];
                 break;
-
             case SKPaymentTransactionStateRestored:
-                [self handleRestoreSuccessForTransaction:transaction];
+                [self handleRestoredTransaction:transaction];
                 break;
-
             default:
                 break;
         }
     }
 }
 
-
-- (void)handlePurchaseSuccessForTransaction:(SKPaymentTransaction *)transaction {
-    NSLog(@"Purchase Successful");
-
-    [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
-    [AdManager sharedManager].isSubscribed = YES;
-    [[AdManager sharedManager] saveSubscriptionStatus];
-
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
-
-
-- (void)handlePurchaseFailureForTransaction:(SKPaymentTransaction *)transaction {
-    NSLog(@"Purchase Failed: %@", transaction.error.localizedDescription);
-    [AdManager sharedManager].isSubscribed = NO;
-    [[AdManager sharedManager] saveSubscriptionStatus];
-    [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
-}
-
-
-- (void)handleRestoreSuccessForTransaction:(SKPaymentTransaction *)transaction {
-    NSLog(@"Restore Successful");
-    [AdManager sharedManager].isSubscribed = YES;
-    [[AdManager sharedManager] saveSubscriptionStatus];
-    [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
-    [self dismissViewControllerAnimated:YES completion:nil];
-}
-
 - (void)paymentQueueRestoreCompletedTransactionsFinished:(SKPaymentQueue *)queue {
-    // This method will be called when the restoration is successful
-    for (SKPaymentTransaction *transaction in queue.transactions) {
-        // Process the restored transaction here
-        // You can check the product identifier to handle different purchases
-        NSLog(@"Restored product: %@", transaction.payment.productIdentifier);
+    if (queue.transactions.count == 0) {
+        UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"No Purchases"
+                                                                       message:@"You haven't made any purchases to restore."
+                                                                preferredStyle:UIAlertControllerStyleAlert];
+        UIAlertAction *action = [UIAlertAction actionWithTitle:@"OK"
+                                                         style:UIAlertActionStyleDefault
+                                                       handler:nil];
+        [alert addAction:action];
+        [self presentViewController:alert animated:YES completion:nil];
+    } else {
+        // Handle the case where purchases are restored
+        for (SKPaymentTransaction *transaction in queue.transactions) {
+            if (transaction.transactionState == SKPaymentTransactionStateRestored) {
+                NSLog(@"Transaction restored: %@", transaction.payment.productIdentifier);
+                [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
 
-        // Complete the transaction
-        [[SKPaymentQueue defaultQueue] finishTransaction:transaction];
+                [AdManager sharedManager].isSubscribed = YES;
+                [[AdManager sharedManager] saveSubscriptionStatus];
+
+                UIAlertController *alert = [UIAlertController alertControllerWithTitle:@"Purchase Restored"
+                                                                           message:@"Your previous purchase has been restored."
+                                                                    preferredStyle:UIAlertControllerStyleAlert];
+                UIAlertAction *action = [UIAlertAction actionWithTitle:@"OK"
+                                                                 style:UIAlertActionStyleDefault
+                                                               handler:^(UIAlertAction * _Nonnull action) {
+                                                                   [self dismissViewControllerAnimated:YES completion:nil];
+                                                               }];
+                [alert addAction:action];
+                [self presentViewController:alert animated:YES completion:nil];
+            }
+        }
     }
-}
-
-- (void)paymentQueue:(SKPaymentQueue *)queue restoreCompletedTransactionsFailedWithError:(NSError *)error {
-    NSLog(@"Failed to restore purchases: %@", error.localizedDescription);
-}
-
-- (void)paymentQueue:restoreCompletedTransactionsFailedWithError:(SKPaymentQueue *)queue error:(NSError *)error {
-    // Handle the error if the restoration fails
-    NSLog(@"Failed to restore purchases: %@", error.localizedDescription);
-}
-
-- (void)dealloc {
-    
-    [[SKPaymentQueue defaultQueue] removeTransactionObserver:self];
 }
 
 @end
