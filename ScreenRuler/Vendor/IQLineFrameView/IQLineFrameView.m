@@ -527,9 +527,8 @@ typedef NS_ENUM(NSUInteger, PositionSelector) {
                         {
                             bottomTextLayer = [[CATextLayer alloc] init];
                             bottomTextLayer.actions = disabledActions;
-                            bottomTextLayer.foregroundColor = UIColor.redColor.CGColor;
 
-//                            bottomTextLayer.foregroundColor = self.lineColor.CGColor;
+                            bottomTextLayer.foregroundColor = self.lineColor.CGColor;
                             bottomTextLayer.contentsScale = [[UIScreen mainScreen] scale];
                             bottomTextLayer.font = (__bridge CFTypeRef)@"KohinoorBangla-Semibold";
                             bottomTextLayer.fontSize = (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)?16:10;

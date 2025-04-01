@@ -82,6 +82,13 @@ const NSInteger kSRAppStoreID = 1104790987;
     return YES;
 }
 
+
+- (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window {
+    return UIInterfaceOrientationMaskPortrait;  // सिर्फ़ Portrait मोड अलाऊ होगा
+}
+
+
+
 -(BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation
 {
     NSData *data = [NSData dataWithContentsOfURL:url];

@@ -8,19 +8,19 @@
 
 #import <UIKit/UIKit.h>
 
-// Define MeasureUnit enum here
-typedef NS_ENUM(NSInteger, MeasureUnit) {
-    measureUnitPx,      // Pixel
-    measureUnitCm,      // Centimeter
-    measureUnitInches   // Inches
-};
+//// Define MeasureUnit enum here
+//typedef NS_ENUM(NSInteger, MeasureUnit) {
+//    measureUnitPx,      // Pixel
+//    measureUnitCm,      // Centimeter
+//    measureUnitInches   // Inches
+//};
 
 
 @interface SRLineImageView : UIImageView
 
-@property (nonatomic, assign) MeasureUnit currentUnit;
-
-- (void)setCurrentUnit:(MeasureUnit)currentUnit;
+//@property (nonatomic, assign) MeasureUnit currentUnit;
+//
+//- (void)setCurrentUnit:(MeasureUnit)currentUnit;
 
 @property(nonatomic,assign) CGPoint startingScalePoint;
 @property(nonatomic,assign) CGSize scaleMargin;

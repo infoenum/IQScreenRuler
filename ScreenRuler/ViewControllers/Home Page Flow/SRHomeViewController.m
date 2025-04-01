@@ -35,6 +35,9 @@
 #import "AdManager.h"
 
 //https://www.iconfinder.com/iconsets/hawcons-gesture-stroke
+@interface SRHomeViewController ()
+
+@end
 
 @interface SRHomeViewController ()<UIScrollViewDelegate,UIGestureRecognizerDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,UIToolbarDelegate,UIPopoverPresentationControllerDelegate,MPCoachMarksViewDelegate,SRImageControllerDelegate,SRScreenshotCollectionViewControllerDelegate,IQLineFrameViewDelegate>
 {
@@ -90,7 +93,6 @@
 @property (weak, nonatomic) IBOutlet UIView *sliderView;
 
 @property (nonatomic, strong) CBZSplashView *splashView;
-
 @end
 
 @implementation SRHomeViewController
@@ -109,9 +111,10 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
     [[AdManager sharedManager] loadInterstitialAd];
 //    self.additionalSafeAreaInsets = UIEdgeInsetsMake(20, 20, 20, 20);
-    
+
     
     //    self.additionalSafeAreaInsets = UIEdgeInsetsMake(20, 20, 20, 20);
         
@@ -212,7 +215,7 @@
         self.ratioButton.selected = YES;
         
         NSInteger selectedRatio = [[UIScreen mainScreen] scale];
-        [self.ratioButton setTitle:[NSString localizedStringWithFormat:@"@%ldx",(long)selectedRatio] forState:UIControlStateNormal];
+        [self.ratioButton setTitle:[NSString localizedStringWithFormat:@"%ldx",(long)selectedRatio] forState:UIControlStateNormal];
         
         _scrollContainerView.imageView.deviceScale = _lineFrameView.deviceScale = _freeRulerView.deviceScale = selectedRatio;
     }
@@ -254,7 +257,9 @@
     } else {
         self.sliderView.alpha = 0;
     }
+    
 }
+
 
 -(void)viewWillAppear:(BOOL)animated
 {
@@ -372,6 +377,8 @@
     _sliderView.hidden = image == nil;
     _freeProtractorView.hidden = image == nil;
 }
+
+
 
 // MARK: OPtionAction
 - (IBAction)optionAction:(UIBarButtonItem *)sender
@@ -1032,23 +1039,19 @@
 - (IBAction)ratioAction:(UIButton *)sender
 {
     NSString *currentTitle = [sender titleForState:UIControlStateNormal];
-    NSInteger currentRatio = 0;
+       NSInteger currentRatio = 0;
 
     if ([currentTitle containsString:@"px"]) {
-        currentRatio = [[currentTitle componentsSeparatedByString:@"px"][0] integerValue];
-        
-        [self.scrollContainerView.imageView setCurrentUnit: measureUnitPx];
-    } else if ([currentTitle containsString:@"cm"]) {
-        currentRatio = 38;
-        [self.scrollContainerView.imageView setCurrentUnit: measureUnitCm];
-    } else if ([currentTitle containsString:@"Inch"]) {
-        currentRatio = 96;
-        [self.scrollContainerView.imageView setCurrentUnit: measureUnitInches];
-    }
+           currentRatio = [[currentTitle componentsSeparatedByString:@"px"][0] integerValue];
+       } else if ([currentTitle containsString:@"cm"]) {
+           currentRatio = 38;
+       } else if ([currentTitle containsString:@"Inch"]) {
+           currentRatio = 96;
+       }
 
-    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"change_scale_multiplier", nil) message:nil preferredStyle:UIAlertControllerStyleActionSheet];
-    
-    __weak typeof(self) weakSelf = self;
+       UIAlertController *alertController = [UIAlertController alertControllerWithTitle:NSLocalizedString(@"change_scale_multiplier", nil) message:nil preferredStyle:UIAlertControllerStyleActionSheet];
+
+       __weak typeof(self) weakSelf = self;
 
     // @1px option
     if (currentRatio != 1)
@@ -1087,6 +1090,7 @@
         }]];
     }
     
+    //@1cm
     if (currentRatio != 38)
     {
         [alertController addAction:[UIAlertAction actionWithTitle:@"1cm" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
@@ -1094,15 +1098,14 @@
 
             NSInteger selectedRatio = 38; // 1CM ≈ 38px (96 DPI)
             [weakSelf.ratioButton setTitle:[NSString localizedStringWithFormat:@"1cm",(long)selectedRatio] forState:UIControlStateNormal];
-            weakSelf.freeRulerView.deviceScale = selectedRatio;
-            weakSelf.lineFrameView.deviceScale = weakSelf.freeRulerView.deviceScale;
-            weakSelf.scrollContainerView.imageView.deviceScale = weakSelf.lineFrameView.deviceScale;
+            weakSelf.scrollContainerView.imageView.deviceScale = weakSelf.lineFrameView.deviceScale = weakSelf.freeRulerView.deviceScale = selectedRatio;
         }]];
     }
 
+    //@1Inch
     if (currentRatio != 96)
     {
-        [alertController addAction:[UIAlertAction actionWithTitle:@"1Inch" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        [alertController addAction:[UIAlertAction actionWithTitle:@"1In" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
             [Answers logCustomEventWithName:@"Change Scale Multiplier" customAttributes:@{@"value":@"96"}];
 
             NSInteger selectedRatio = 96; // 1 Inch ≈ 96 Pixels (96 DPI)

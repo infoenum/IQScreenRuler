@@ -42,8 +42,6 @@
 		4CD032051CC165B800539151 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4CD032031CC165B800539151 /* Main.storyboard */; };
 		4CD0320A1CC165B800539151 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 4CD032081CC165B800539151 /* LaunchScreen.storyboard */; };
 		4CD426BA1DA8234B000AD1CA /* kb-loupe-hi_7.png in Resources */ = {isa = PBXBuildFile; fileRef = 4CD4267F1DA8234B000AD1CA /* kb-loupe-hi_7.png */; };
-		4CD427181DA8236A000AD1CA /* Acknowledgement.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4CD427091DA8236A000AD1CA /* Acknowledgement.plist */; };
-		4CD427191DA8236A000AD1CA /* EULA.html in Resources */ = {isa = PBXBuildFile; fileRef = 4CD4270A1DA8236A000AD1CA /* EULA.html */; };
 		4CED77C61DA82A8E0093176D /* ACMagnifyingGlass.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD4267D1DA8234B000AD1CA /* ACMagnifyingGlass.m */; };
 		4CED77C71DA82A8E0093176D /* IQAngleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD426821DA8234B000AD1CA /* IQAngleView.m */; };
 		4CED77C81DA82A8E0093176D /* HFColorButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 4CD426861DA8234B000AD1CA /* HFColorButton.m */; };
@@ -288,8 +286,6 @@
 		4CD427051DA8236A000AD1CA /* SRThemeTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRThemeTableViewCell.m; sourceTree = "<group>"; };
 		4CD427061DA8236A000AD1CA /* SRPrivacyPolicyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRPrivacyPolicyViewController.h; sourceTree = "<group>"; };
 		4CD427071DA8236A000AD1CA /* SRPrivacyPolicyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SRPrivacyPolicyViewController.m; sourceTree = "<group>"; };
-		4CD427091DA8236A000AD1CA /* Acknowledgement.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Acknowledgement.plist; sourceTree = "<group>"; };
-		4CD4270A1DA8236A000AD1CA /* EULA.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = EULA.html; sourceTree = "<group>"; };
 		4CD4270B1DA8236A000AD1CA /* SRSettingTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SRSettingTableViewController.h; sourceTree = "<group>"; };
 		4CD4270C1DA8236A000AD1CA /* SRSettingTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = SRSettingTableViewController.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		4CD4271C1DA82372000AD1CA /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -708,7 +704,6 @@
 				6A1AEB6A2D82B6010091B915 /* SRGetProVersionViewController.h */,
 				6A1AEB6B2D82B6010091B915 /* SRGetProVersionViewController.m */,
 				4CD427011DA8236A000AD1CA /* Cell */,
-				4CD427081DA8236A000AD1CA /* Resources */,
 				4CD426FF1DA8236A000AD1CA /* SRAcknowledgementTableViewController.h */,
 				4CD427001DA8236A000AD1CA /* SRAcknowledgementTableViewController.m */,
 				4CD427061DA8236A000AD1CA /* SRPrivacyPolicyViewController.h */,
@@ -734,15 +729,6 @@
 				4C853B581DB37585003E3717 /* SRLicenseTableViewCell.m */,
 			);
 			path = Cell;
-			sourceTree = "<group>";
-		};
-		4CD427081DA8236A000AD1CA /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				4CD427091DA8236A000AD1CA /* Acknowledgement.plist */,
-				4CD4270A1DA8236A000AD1CA /* EULA.html */,
-			);
-			path = Resources;
 			sourceTree = "<group>";
 		};
 		4CD4271B1DA82372000AD1CA /* AppDelegate */ = {
@@ -889,11 +875,9 @@
 				4C7396E31DA6A6E700397366 /* Localizable.strings in Resources */,
 				4CD032051CC165B800539151 /* Main.storyboard in Resources */,
 				4C04038B1DA94D3E0075A71B /* Assets.xcassets in Resources */,
-				4CD427181DA8236A000AD1CA /* Acknowledgement.plist in Resources */,
 				4C853B3B1DB27316003E3717 /* iTunesArtwork in Resources */,
 				4C8B705D1DA7AFD200285D24 /* InfoPlist.strings in Resources */,
 				4CD426BA1DA8234B000AD1CA /* kb-loupe-hi_7.png in Resources */,
-				4CD427191DA8236A000AD1CA /* EULA.html in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

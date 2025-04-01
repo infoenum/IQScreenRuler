@@ -63,10 +63,10 @@
     [self setZoomScale:zoomScale animated:NO];
 }
 
-- (void)setCurrentUnit:(MeasureUnit)currentUnit {
-    _currentUnit = currentUnit;
-    [self updateUIAnimated:NO];
-}
+//- (void)setCurrentUnit:(MeasureUnit)currentUnit {
+//    currentUnit = currentUnit;
+//    [self updateUIAnimated:NO];
+//}
 
 -(void)setZoomScale:(CGFloat)zoomScale animated:(BOOL)animated
 {
@@ -154,7 +154,6 @@
         }
         
         NSInteger multiplier = 1;
-        
         if (self.zoomScale >= 4)
         {
             multiplier = 1;
@@ -178,6 +177,32 @@
         
         NSInteger singleStep = multiplier*_deviceScale;
         
+
+//        NSInteger singleStep = 4/self.zoomScale;
+//                
+//        if (self.zoomScale >= 4)
+//        {
+//            singleStep = 1;
+//        }
+//        else if (self.zoomScale >= 0.4)
+//        {
+//            singleStep = 10;
+//        }
+//        else if (self.zoomScale >= 0.04)
+//        {
+//            singleStep = 100;
+//        }
+//        else if (self.zoomScale >= 0.004)
+//        {
+//            singleStep = 1000;
+//        }
+//        else
+//        {
+//            singleStep = 10000;
+//        }
+//        
+//        CGFloat multiplier = singleStep / _deviceScale;
+//        
         CGPoint respectivePoint = self.startingScalePoint;
 
         CGFloat  minX = CGRectGetMinX(newRect);
@@ -246,7 +271,8 @@
                     else
                     {
                         CGFloat value = _zoomScale*multiplier;
-                        layer.opacity = (value-4)/(40.0-4);
+                        CGFloat opacity = (value-4)/(40.0-4);
+                        layer.opacity = opacity;
                     }
                 }
             }
@@ -305,7 +331,8 @@
                     else
                     {
                         CGFloat value = _zoomScale*multiplier;
-                        layer.opacity = (value-4)/(40.0-4);
+                        CGFloat opacity = (value-4)/(40.0-4);
+                        layer.opacity = opacity;
                     }
                 }
             }

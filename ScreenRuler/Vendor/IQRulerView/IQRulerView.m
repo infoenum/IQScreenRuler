@@ -24,7 +24,6 @@
 
 @end
 
-
 @implementation IQRulerView
 
 #pragma mark - Initialization
