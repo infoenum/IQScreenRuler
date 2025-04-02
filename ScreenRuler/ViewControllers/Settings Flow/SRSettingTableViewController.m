@@ -127,7 +127,16 @@
     
     [Answers logCustomEventWithName:@"Theme Changed" customAttributes:nil];
 
-    sender.tintColor = [UIColor themeColor];
+    // Find and update theme cell
+    NSIndexPath *themeCellIndexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+    SRThemeTableViewCell *themeCell = [self.tableView cellForRowAtIndexPath:themeCellIndexPath];
+    
+    // Update all color buttons
+    for (HFColorButton *button in themeCell.themeColorButtons) {
+        NSString *buttonHexValue = [button.color hexValue];
+        NSString *selectedHexValue = [[UIColor originalThemeColor] hexValue];
+        button.selected = ([selectedHexValue isEqualToString:buttonHexValue]);
+    }
 
     [self updateNavigationBarUI];
 }

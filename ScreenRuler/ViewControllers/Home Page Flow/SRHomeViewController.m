@@ -258,15 +258,7 @@
         self.sliderView.alpha = 0;
     }
 
-    self.ratioButton.layer.cornerRadius = 3.0;
-    self.ratioButton.layer.masksToBounds = YES;
-    [self.ratioButton setTitleColor:[UIColor themeTextColor] forState:UIControlStateNormal];
-    [self.ratioButton setTitleColor:[UIColor blackColor] forState:UIControlStateSelected];
-    [self.ratioButton setTitleColor:[UIColor themeTextColor] forState:UIControlStateHighlighted];
-    self.ratioButton.tintColor = [UIColor themeTextColor];
-
 }
-
 
 -(void)viewWillAppear:(BOOL)animated
 {
@@ -911,6 +903,7 @@
     __weak typeof(self) weakSelf = self;
 
     [controller dismissViewControllerCompletion:^{
+        weakSelf.image = image;
         weakSelf.image = image;
     }];
 }
