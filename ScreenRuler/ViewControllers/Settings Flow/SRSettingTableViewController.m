@@ -98,7 +98,7 @@
     self.navigationController.navigationBar.barTintColor = [UIColor themeColor];
     self.navigationController.navigationBar.tintColor = [UIColor themeTextColor];
     self.navigationController.navigationBar.barStyle = ![UIColor isThemeInverted];
-
+    [self updateNavigationBarUI];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(iVersionDidUpdateNotification:) name:iVersionDidUpdateNotification object:nil];
 
     [self.tableView reloadData];
